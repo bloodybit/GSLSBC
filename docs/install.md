@@ -1,6 +1,6 @@
 # Installation manual
 
-On a Debian-based system, execute the following commands to build GReg
+On a Debian-based system, execute the following commands to build GSLSBC
 
 - Install maven and git:
 ```
@@ -21,7 +21,7 @@ sudo apt-get -y install docker-engine
 cd /var
 sudo mkdir gslsbc
 cd gslsbc
-sudo git clone https://github.com/reTHINK-project/dev-registry-global.git
+sudo git clone https://gitlab.tubit.tu-berlin.de/sebastian.goendoer/GSLSBC.git
 sudo git checkout tags/0.0.1
 sudo mvn clean
 sudo mvn install
