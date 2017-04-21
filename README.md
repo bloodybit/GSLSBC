@@ -1,3 +1,3 @@
-# IOSL SS 2017
+# IOSL SS 2017: BCIDM
 
-## Global Social Lookup System via Blockchain
+## Identity Management via Blockchain
