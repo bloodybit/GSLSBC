@@ -31,15 +31,48 @@ Aside from routing, there exist many algorithms that exploit the structure of th
 \end{list}
 
 \section{Blockchain Implementations}
+\subsection*{Blockchain introduction}
+Blockchain’s distributed ledger system is used to keep track of Bitcoin transactions. Blockchain eliminates the need for central authorities and enables each user of the system to maintain their own copy of the ledger. It also keeps all copies of the ledger synchronized through a consensus algorithm.Bitcoin miners do the recording and validation of the transactions. The miners are necessary to prevent ‘double spend.’
 \subsection*{Bitcoin}
+Blockchain is a distributed ledger technology used to keep track of Bitcoin cryptocurrency transactions. Distributed ledgers create a data structure – like a chain – where records of every single Bitcoin transaction live. To prevent “double spend,” all Bitcoin transactions are validated and then permanently archived in the cryptographic ledger or chain. The validation is done via a peer-to-peer process that is hugely computer-intensive. It is supported by a global network of volunteers – known as “miners” – who are incentivized mainly by Bitcoin’s mining reward.
+In essence, Bitcoin uses cryptography to enable participants on the network to update the ledger in a secure way without the need for a central authority. The key to Blockchain was to agree on the order of entries in the ledger. Once this was in place, distributed control of Bitcoin was possible.
+
 \subsection*{Namecoin}
-\subsection*{Hyperledger}
+Namecoin is an experimental open-source technology which improves decentralization, security, censorship resistance, privacy, and speed of certain components of the Internet infrastructure such as DNS and identities. Namecoin is a key/value pair registration and transfer system based on the Bitcoin technology.
+What does Namecoin do under the hood?
+\begin{list}{}{}
+\item Securely record and transfer arbitrary names (keys).
+\item Attach a value (data) to the names (up to 520 bytes).
+\item Transact the digital currency namecoins (NMC).
+\item Like bitcoins, Namecoin names are difficult to censor or seize.
+\item Lookups do not generate network traffic (improves privacy).
+\end{list}
+
+\subsection*{Hyperledger / Hyperledger Fabric}
+Hyperledger is an open source collaborative effort created to advance cross-industry blockchain technologies. It is a global collaboration, hosted by The Linux Foundation, including leaders in finance, banking, Internet of Things, supply chains, manufacturing and Technology.
+Hyperledger Fabric is a business blockchain framework hosted on Hyperledger intended as a foundation for developing blockchain applications or solutions with a modular architecture. Hyperledger Fabric allows components such as consensus and membership services to be plug-and-play.
+Hyperledger Fabric establishes trust, transparency, and accountability based on the following principles:
+\begin{list}{}{}
+\item Permissioned network - Provides collectively defined membership and access rights within your business network
+\item Confidential transactions - Gives businesses the flexibility and security to make transactions visible to select parties with the correct encryption keys
+\item No cryptocurrency - Does not require mining and expensive computations to assure transactions
+\item Programmable - Leverage the embedded logic in smart contracts to automate business processes across your network
+\end{list}
+
 \subsection*{Ehtereum}
-\subsection*{Hyperledger}
+Ethereum is a  decentralized platform that runs smart contracts: applications that run exactly as programmed without any possibility of downtime, censorship, fraud or third party interference.
+These apps run on a custom built  blockchain, an enormously powerful shared global infrastructure that can move value around and represent the ownership of property. This enables developers to create markets, store registries of debts or promises, move funds in accordance with instructions given long in the past (like a will or a futures contract) and many other things that have not been invented yet, all without a middle man or counterparty risk.
+On traditional server architectures, every application has to set up its own servers that run their own code in isolated silos, making sharing of data hard. If a single app is compromised or goes offline, many users and other apps are affected.
+On a blockchain, anyone can set up a node that replicates the necessary data for all nodes to reach an agreement and be compensated by users and app developers. This allows user data to remain private and apps to be decentralized like the Internet was supposed to work.
 \subsection*{Storj}
+Storj is a peer-to-peer cloud storage network implementing client-side encryption would allow users to transfer and share data without reliance on a third party storage provider. The removal of central controls would mitigate most traditional data failures and outages, as well as significantly increase security, privacy, and data control. Peer-to-peer networks are generally unfeasible for production storage systems, as data availability is a function of popularity, rather than utility.
 \subsection*{Swarm}
+Swarm is a distributed storage platform and content distribution service, a native base layer service of the ethereum web 3 stack. The primary objective of Swarm is to provide a decentralized and redundant store of Ethereum's public record, in particular to store and distribute dapp code and data as well as block chain data. 
+From the end user's perspective, Swarm is not that different from WWW, except that uploads are not to a specific server. The objective is to peer-to-peer storage and serving solution that is DDOS-resistant, zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer to peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution, service payments and content availability insurance.
 \subsection*{IPFS}
+The InterPlanetary File System (IPFS) is a peer-to-peer distributed file system that seeks to connect all computing devices with the same system of files. In some ways, IPFS is similar to the Web, but IPFS could be seen as a single BitTorrent swarm, exchanging objects within one Git repository. In other words, IPFS provides a high throughput content-addressed block storage model, with contentaddressed hyper links. This forms a generalized Merkle DAG, a data structure upon which one can build versioned file systems, blockchains, and even a Permanent Web. IPFS combines a distributed hashtable, an incentivized block exchange, and a self-certifying namespace. IPFS has no single point of failure, and nodes do not need to trust each other.
 \subsection*{Filecoin}
+Filecoin is a distributed electronic currency similar to Bitcoin. Unlike Bitcoin’s computation-only proof-of-work, Filecoin’s proof-of-work function includes a proof-of-retrievability component, which requires nodes to prove they store a particular file. The Filecoin network forms an entirely distributed file sorage system, whose nodes are incentivized to store as much of the entire network’s data as they can. The currency is awarded for storing files, and is transferred in transactions, as in Bitcoin. Files are added to the network by spending currency. This produces strong monetary incentives for individuals to join and work for the network. In the course of ordinary operation of the Filecoin network, nodes contribute useful work in the form of storage and distribution of valuable data.
 \section{Blockstack Use Case}
 \section{How to Store Social Records}
 \subsection{Solution 1}
