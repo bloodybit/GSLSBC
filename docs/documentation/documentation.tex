@@ -71,6 +71,28 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{rotating}
 \newcommand\tabrotate[1]{\begin{turn}{90}\rlap{#1}\end{turn}}
 
+
+\newenvironment{notation}{%
+   \def\FrameCommand{\colorbox{yellow!20}}%
+   \MakeFramed{\advance\hsize-\width \FrameRestore}}
+ {\endMakeFramed}
+
+ % Write Question
+ \newenvironment{question}{%
+   \def\FrameCommand{\colorbox{red!20}}%
+   \MakeFramed{\advance\hsize-\width \FrameRestore}}
+ {\endMakeFramed}
+
+ % Useful Basics
+ \usepackage{color}
+ \usepackage{xcolor}
+ \usepackage{framed}
+
+ % Write Answer
+ \newenvironment{answer}{%
+   \def\FrameCommand{\colorbox{green!20}}%
+   \MakeFramed{\advance\hsize-\width \FrameRestore}}
+ {\endMakeFramed}
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
 %----------------------------------------------------------------------------------------

@@ -11,10 +11,10 @@ A distributed hash table (DHT) is a class of a decentralised distributed system 
 \begin{list}{}{}
 \item \emph{Autonomy and decentralization}: multiple nodes, no central coordinator;
 \item \emph{Fault tolerance}: reliable, no single point of failure (like Napster’s central server) (Byzantine fault tolerance);
-\item \emph{Scalability}: the system scales. This means it’s working efficiently regardless the workload; 
+\item \emph{Scalability}: the system scales. This means it’s working efficiently regardless the workload;
 \item \emph{Load balancing} (optional);
 \item \emph{Data integrity} (optional).
-\end{list}  
+\end{list}
 
 \subsection{Functioning Example}
 Once these components are in place, a typical use of the DHT for storage and retrieval might proceed as follows. Suppose the keyspace is the set of 160-bit strings. To index a file with given filename and data in the DHT, the SHA-1 hash of filename is generated, producing a 160-bit key k, and a message put(k, data) is sent to any node participating in the DHT. The message is forwarded from node to node through the overlay network until it reaches the single node responsible for key k as specified by the keyspace partitioning. That node then stores the key and the data. Any other client can then retrieve the contents of the file by again hashing filename to produce k and asking any DHT node to find the data associated with k with a message get(k). The message will again be routed through the overlay to the node responsible for k, which will reply with the stored data.
@@ -22,11 +22,11 @@ Once these components are in place, a typical use of the DHT for storage and ret
 \subsection{The Network}
 Each node maintains a set of links to other nodes (its neighbors or routing table). Together, these links form the overlay network. A node picks its neighbors according to a certain structure, called the network's topology.
 
-Aside from routing, there exist many algorithms that exploit the structure of the overlay network for sending a message to all nodes, or a subset of nodes, in a DHT. These algorithms are used by applications to do overlay multicast, range queries, or to collect statistic. (Flooding). 
+Aside from routing, there exist many algorithms that exploit the structure of the overlay network for sending a message to all nodes, or a subset of nodes, in a DHT. These algorithms are used by applications to do overlay multicast, range queries, or to collect statistic. (Flooding).
 
 \subsection*{Implementations Considered}
 \begin{list}{}{}
-\item Kademlia 
+\item Kademlia
 \item TomP2P
 \end{list}
 
@@ -68,7 +68,7 @@ On a blockchain, anyone can set up a node that replicates the necessary data for
 \subsection*{Storj}
 Storj is a peer-to-peer cloud storage network implementing client-side encryption would allow users to transfer and share data without reliance on a third party storage provider. The removal of central controls would mitigate most traditional data failures and outages, as well as significantly increase security, privacy, and data control. Peer-to-peer networks are generally unfeasible for production storage systems, as data availability is a function of popularity, rather than utility.
 \subsection*{Swarm}
-Swarm is a distributed storage platform and content distribution service, a native base layer service of the ethereum web 3 stack. The primary objective of Swarm is to provide a decentralized and redundant store of Ethereum's public record, in particular to store and distribute dapp code and data as well as block chain data. 
+Swarm is a distributed storage platform and content distribution service, a native base layer service of the ethereum web 3 stack. The primary objective of Swarm is to provide a decentralized and redundant store of Ethereum's public record, in particular to store and distribute dapp code and data as well as block chain data.
 From the end user's perspective, Swarm is not that different from WWW, except that uploads are not to a specific server. The objective is to peer-to-peer storage and serving solution that is DDOS-resistant, zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer to peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution, service payments and content availability insurance.
 \subsection*{IPFS}
 The InterPlanetary File System (IPFS) is a peer-to-peer distributed file system that seeks to connect all computing devices with the same system of files. In some ways, IPFS is similar to the Web, but IPFS could be seen as a single BitTorrent swarm, exchanging objects within one Git repository. In other words, IPFS provides a high throughput content-addressed block storage model, with contentaddressed hyper links. This forms a generalized Merkle DAG, a data structure upon which one can build versioned file systems, blockchains, and even a Permanent Web. IPFS combines a distributed hashtable, an incentivized block exchange, and a self-certifying namespace. IPFS has no single point of failure, and nodes do not need to trust each other.
@@ -80,7 +80,7 @@ Blockstack is a particular implementation of a decentralized DNS system based on
 
 According to the company: "under the hood, Blockstack provides a decentralized domain name system (DNS), decentralized public key distribution system, and registry for apps and user identities" [add reference].
 
-The real breakthrough is the architecture the system is built on. It can be described as a three-layer design with the blockchain as the first and lower tier, the storage system as the upper and the peer network as middle layer.  
+The real breakthrough is the architecture the system is built on. It can be described as a three-layer design with the blockchain as the first and lower tier, the storage system as the upper and the peer network as middle layer.
 
 The architecture is shown in \ref{fig:blockstack-architecture}.
 \begin{figure}[h]
@@ -92,40 +92,55 @@ The architecture is shown in \ref{fig:blockstack-architecture}.
 
 \section{How to Store Social Records}
 \subsection{Solution 1}
-Store the Social Record directly in the data field of a transaction. 
-Then the problems are: 
+The most intuitive solution would be to switch from the DHT table to the Blockchain, moving each social record through a transaction.
+Unfortunately after few considerations, this approach does not seem to be optimal:
+\begin{itemize}
+	\item Store the entire social record would occupy a high amount of memory in the distribuited node.
+	In particular the limit for the data structure is 44kb, but is best practice to keep the records light.
+	\item Check the real identity of the uploader would be impossible, one option could be to allow only a specific wallet address to write into it.
+	\item Look up would not be efficient.
+\end{itemize}
 
-\begin{list}{}{}
-\item How do I retrieve the social record?
-\item Every time i update the social record, the transaction address changes
-\item Storing an entire social record costs more gas than storing only its hash.
-\item How should the social record be stored? Only one contract with all the Social Records inside? But then other problems arise like: the gas cost per each operation, the necessity to build a data structure inside the contract losing all the good properties provided by the blockchain. Then the data field space is only about 44KB.
-\item If you use one transaction per Social Record, then you have to search through the entire blockchain, looking inside the transaction tree starting from the merkel root per each block. Not that efficient. 
-\end{list}
 
 \subsection{Solution 2}
 \subsubsection{Version 1}
-This solution is inspired by Blockstack architecture and requires to create a DHT to map the GlobalID to the address of the transaction contained inside the blockchain. 
+This solution is inspired by Blockstack architecture and requires to create a DHT to map the GlobalID to the address of the transaction contained inside the blockchain.
 
-The transaction holds in the data field the hash of the Social Record. In this manner, the blockchain has the role of validation infrastructure rather than storage system. The actual data is stored in the distributed hash table. This solution could be vulnerable in case a malicious node tries to restore an old version of the social record by injecting the wrong address in the DHT table and causing a wrong mapping. 
+The transaction holds in the data field the hash of the Social Record. In this manner, the blockchain has the role of validation infrastructure rather than storage system. The actual data is stored in the distributed hash table. This solution could be vulnerable in case a malicious node tries to restore an old version of the social record by injecting the wrong address in the DHT table, causing a currupted record.
 
-Another vulnerability could be in the consistency of the data, some node could be inconsistent id the DHT doesn’t get updated. Therefore, the version control should be handled by the blockchain. Most of the vulnerabilities depend on the fact that a transaction stored in the blockchain has a different address every time we update the information contained within the Social Record. 
+
+\begin{notation}
+	<<< Not clear >>>
+\end{notation}
+Another vulnerability could be in the consistency of the data, some node could be inconsistent id the DHT doesn’t get updated. Therefore, the version control should be handled by the blockchain. Most of the vulnerabilities depend on the fact that a transaction stored in the blockchain has a different address every time we update the information contained within the Social Record.
 
 \subsubsection{Version 2}
-The third solution is based on the second one but requires each user to hold an Ethereum Wallet. In such design each transaction contains both the Wallet public key and the hash of the Social Record within the data field. Every time the Social Record gets updated, its hash changes and the new transaction will have a different address. 
+The third solution is based on the second one but requires each user to hold an Ethereum Wallet. In such design each transaction contains both the Wallet public key and the hash of the Social Record within the data field. Every time the Social Record gets updated, its hash changes and the new transaction will have a different address.
 
-The idea is to use the wallet public key as id, and map the GlobalID with the Wallet ID which will remain always the same. Searching inside the blockchain looking for the ID, the ledger will return the latest version. Compared to the second solution, the former provide version check through the blockchain rather than DHT. 
+The idea is to use the wallet public key as id, and map the GlobalID with the Wallet ID which will remain always the same. Searching inside the blockchain looking for the ID, the ledger will return the latest version. Compared to the second solution, the former provide version check through the blockchain rather than DHT.
 
 \subsection{Solution 3}
-Blockstack offers an already implemented solution using a layered architecture similar to the one proposed in solution 2. It allows also to choose among different blockchain implementations and storage systems. Nevertheless, the underlying idea is the same as solution 2: use the blockchain as a validation system and use a DHT to map ids (keys/GlobalIDs) with the corresponding values (Social Records). 
+Blockstack offers an already implemented solution using a layered architecture similar to the one proposed in solution 2. It allows also to choose among different blockchain implementations and storage systems. Nevertheless, the underlying idea is the same as solution 2: use the blockchain as a validation system and use a DHT to map ids (keys/GlobalIDs) with the corresponding values (Social Records).
 
-According to Blockstack, the applications built on this system are server-less and decentralized. 
-Developers start by building a single-page application in Javascript. 
-Then, instead of plugging the frontend into a centralized API, they plug into an API run by the user. 
+According to Blockstack, the applications built on this system are server-less and decentralized.
+Developers start by building a single-page application in Javascript.
+Then, instead of plugging the frontend into a centralized API, they plug into an API run by the user.
 Developers install a library called 'blockstack.js' and do not have to worry about running servers, maintaining databases, or building out user management systems [add reference].
+
+\subsection{Solution 4}
+Trying to semplify the complexity of the process, it could be possible to have in the contract a \textit{key-value} array where the key is the GlobalId and the value is the hash already presented in the solution 2.
+
+Given the fact that the GSLS is an open source not centrally managed server, a safety threat may arise.
+In order to ask to the server to conclude a particular transaction, a password is required (otherwise a malicious user could update the social record on behalf of someone else), but of course in case of a malicious node the password could be sniffed.
+
+In order to solve this problem, the following approaches are suggested:
+
+\begin{itemize}
+	\item 
+\end{itemize}
 
 \section{Security}
 \subsection{Elliptic Curves}
-ECC is the next generation of public key cryptography, and based on currently understood mathematics, it provides a significantly more secure foundation than first-generation public key cryptography systems like RSA. 
+ECC is the next generation of public key cryptography, and based on currently understood mathematics, it provides a significantly more secure foundation than first-generation public key cryptography systems like RSA.
 
 With ECC, you can use smaller keys to get the same levels of security. Small keys are important, especially in a world where more and more cryptography is done on less powerful devices like mobile phones. While multiplying two prime numbers together is easier than factoring the product into its component parts, when the prime numbers start to get very long, even just the multiplication step can take some time on a low powered device. While you could likely continue to keep RSA secure by increasing the key length, that comes with a cost of slower cryptographic performance on the client. ECC appears to offer a better tradeoff: high security with short, fast keys.
