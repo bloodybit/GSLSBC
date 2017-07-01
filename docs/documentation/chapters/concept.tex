@@ -1,2 +1,114 @@
 \chapter{Concept and Design}
 \label{chapter:concept}
+\section{Approaches to Store Social Records}
+\subsection{Store the Social Record}
+The most intuitive solution would be to switch from the DHT table to the Blockchain, moving each social record through a transaction.
+Unfortunately after few considerations, this approach does not seem to be optimal:
+\begin{itemize}
+	\item Store the entire social record would occupy a high amount of memory in the distribuited node.
+	In particular the limit for the data structure is 44kb, but is best practice to keep the records light.
+	\item Check the real identity of the uploader would be impossible, one option could be to allow only a specific wallet address to write into it.
+	\item Look up would not be efficient.
+\end{itemize}
+
+
+\subsection{Store the Hash}
+This solution is inspired by Blockstack architecture and requires to create a DHT to map the GlobalID to the address of the transaction contained inside the blockchain.
+
+The transaction holds in the data field the hash of the Social Record. In this manner, the blockchain has the role of validation infrastructure rather than storage system. The actual data is stored in the distributed hash table. This solution could be vulnerable in case a malicious node tries to restore an old version of the social record by injecting the wrong address in the DHT table, causing a currupted record.
+
+\subsection{Use a third-party solution}
+Blockstack offers an already implemented solution using a layered architecture similar to the one proposed in solution 2. It allows also to choose among different blockchain implementations and storage systems. Nevertheless, the underlying idea is the same as solution 2: use the blockchain as a validation system and use a DHT to map ids (keys/GlobalIDs) with the corresponding values (Social Records).
+
+According to Blockstack, the applications built on this system are server-less and decentralized.
+Developers start by building a single-page application in Javascript.
+Then, instead of plugging the frontend into a centralized API, they plug into an API run by the user.
+Developers install a library called 'blockstack.js' and do not have to worry about running servers, maintaining databases, or building out user management systems [add reference].
+
+
+\section{How to Store the Social Records}
+It is important to understand how to write transactions in the blockchain, in particular in an ethereum contract.
+
+Given the fact that the GSLS is an open source not centrally managed server, a safety threat may arise.
+In order to ask to the server to conclude a particular transaction, a password is required (otherwise a malicious user could update the social record on behalf of someone else), but of course in case of a malicious node the password could be sniffed.
+In order to solve this problem asymmetric keys solutions can be implemented (such as the mentioned above RSA and ECC).
+
+
+The contract will therefore be a \textit{key-value} array whith the globalId as key and the as value a json object with the folliwing structure:
+
+\paragraph{In case of we store the hashed Social Record}\
+\begin{lstlisting}
+	{
+		publicKey: String,
+		hashedSocialRecord: String,
+	}
+\end{lstlisting}
+
+With this data structure in order to verify the authenticity of the social record will be enough to hash the DHT social record and check it with the variable stored in the blockchain for that particular user.
+In order to update the information is required to encript the following object with the user's private key:
+
+\begin{lstlisting}
+	{
+		globalId: String,
+		hashedSocialRecord: String,
+	}
+\end{lstlisting}
+
+So the contract is able to open the message, check if the globalId match with the one of the user and update the record.
+
+
+\paragraph{In case of we store the entire Social Record}\
+\begin{lstlisting}
+	{
+		publicKey: string,
+		socialRecord: Object
+	}
+\end{lstlisting}
+
+The record to store is similar, the only difference is that rather than the hashedSocialRecord string, the contract is storying the socialRecord Object (which imply higher costs).
+Unfortunately the process to insert the social record for the first time is more complex.
+The main reason of this complexity is due to the fact that the GSLS sistem will not look up for the DHT table anymore (and therefore it will be possible to remove it) and the authenticity of the record must be assured by the solidity contract.
+
+The first writing especially, will be extremely difficult with an object as follow:
+\begin{lstlisting}
+	{
+		globalId: string,
+		publicKey: string,
+		encriptedData: string,
+	}
+\end{lstlisting}
+
+EncriptedData is a string that can be decrypted with the public key and that will be declared authentic if the result of the decrpytion will be a JSON object as follow.
+\begin{lstlisting}
+{
+	globalId: string,
+	socialRecord: Object,
+}
+\end{lstlisting}
+
+This approach, even though complicated at first, solve a crucial problem and the biggest barrier of the blockchain technology in general: force all the users to run the blockchain.
+
+In fact, if the users don't want to host the ethereum node and cannot rely on the authenticity of the server, they are impossibilitated to update their record.
+
+It is a common practice to trust the server identity of every service (and when it is not possible to trust the service, it is still possiblo to write in the blockchain), but with this approach the writing/reading problem can be solved even without trusting anyone and without hosting any blockchain.
+
+Unfortunately, so far, an asymmetric library in solidity has not been developed yet.
+
+
+Event though the implementation of Elliptic Curves or RSA keys would be a useful (although expensive) feature, and the Elliptic curve is already implemented in Ethereum in order to create and verify private and public keys, a solidity implementation is not yet available.
+
+Nevertheless there are several proposals and RFCs both for RSA and Elliptic curves \citep{ECImplementation} \citep{RSAImplementation} and have been taken place suggestions of implementing asymmetric keys and many other features in the EVM2.0.
+Because of this lack the described process cannot be pursued.
+
+
+\section{Use wallet without hosting an Ethereum Node}
+
+The last approach that this paper wants to explain requires the users to create an Ethereum wallet but not to host an Ethereum node and can ensure a complete and working implementation without the DHT.
+
+The \textit{key-value} array this time has the user's wallet address as a key and the social record object as a value; this approach also reduce the complexity of the algorithm that needs to be run in solidity and therefore the costs.
+
+The steps to follow are the same as the user participate in the blockchain with an ethereum node: he creates the transaction with all the data but, instead of uploading it in the network, the transaction is sent to the GSLS node and then finally pushed on the network.
+
+This metodology is called offline transaction because the client can create and sign transactions with his ethereum account without running the node and so: being offline. The only limitation of this solution is that the transaction needs be signed with the private key of the account instead that with the usual combination of username - password created with the account.
+
+This could lead to suspicion over this authentication system because the common sense and the documentation suggests not to share the private key, it is important to notice that the private key is not shared to the server and will never leave the local environment.
