@@ -176,3 +176,10 @@ TSWLatexianTemp*
 *~[0-9]*
 # auto folder when using emacs and auctex 
 /auto/*
+
+
+*/node_modules
+.DS_Store
+*.log
+.idea
+.vscode
