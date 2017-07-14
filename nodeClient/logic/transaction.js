@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import Transaction from 'ethereumjs-tx'; // raw transactions
 import { Wallet } from 'ethers'; // wallet utils 
 import * as http from 'http'; // http requests 
-import jsonfile from 'jsonfile'; // i/o json files
+import jsonFile from 'jsonfile'; // i/o json files
 import path from 'path'; // handle paths 
 import * as _ from 'lodash'; // utility functions 
 
@@ -20,7 +20,7 @@ function createRawTrans(socialRecord, cb) {
     console.log(`create Raw Transaction`);
 
     // TODO Get this variables from apis or server
-    if (!window.currentWallet.address){
+    if (!window.currentWallet.address) {
         cb('no address set', null);
     }
     let nonce = web3.toHex(web3.eth.getTransactionCount(window.currentWallet.address));
@@ -45,7 +45,7 @@ function createRawTrans(socialRecord, cb) {
         chainId: 3
     }
 
-    console.log(`txParams:`,txParams);
+    console.log(`txParams:`, txParams);
 
     let tx = new Transaction(txParams);
 
@@ -100,10 +100,10 @@ function sendTransaction(transactionHash) {
     });
 }
 
-function test(e) {
+function test(e, cb) {
 
     console.log('TEST');
-    web3.personal.unlockAccount(web3.eth.accounts[0], 'supermario', 15000);
+    web3.personal.unlockAccount(web3.eth.accounts[0], 'test-account-pwd', 15000);
     web3.eth
         .contract(socialRecordContract.abi) // socialRecordContract
         .new({
@@ -120,7 +120,9 @@ function test(e) {
                 config.contractAddress = contract.address;
                 jsonFile.writeFileSync('./resources/config.json', config);
                 console.log(contract.address);
+                cb(contract.address);
             }
         });
 }
-export { createRawTrans, sendTransaction };
+
+export { createRawTrans, sendTransaction, test };

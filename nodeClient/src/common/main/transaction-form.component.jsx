@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import jsonFile from 'jsonfile';
 
-import { createRawTrans, sendTransaction } from './../../../logic/transaction';
+import { createRawTrans, sendTransaction, test } from './../../../logic/transaction';
 
 import DragHere from '../drag-here.component.jsx';
 
@@ -15,6 +15,7 @@ class TransactionForm extends Component {
         this.toggleFormElement = this.toggleFormElement.bind(this);
         this.sendTransactionToGsls = this.sendTransactionToGsls.bind(this);
         this.setSocialRecord = this.setSocialRecord.bind(this);
+        this.testContractCreation = this.testContractCreation.bind(this);
     }
     
     toggleFormElement(e, show) {
@@ -22,6 +23,12 @@ class TransactionForm extends Component {
         this.setState({showElement: show});
         return false;
     }
+
+    testContractCreation(e) {
+        e.preventDefault();
+        test((contractAddress) => console.log(contractAddress));
+    }
+    
 
     sendTransactionToGsls(e) {
         e.preventDefault();
@@ -58,6 +65,8 @@ class TransactionForm extends Component {
         return (
             <form className="add-poi-form">
                 <h3>New Transaction</h3>
+                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testContractCreation(e, false)}>Test</button>
+
                 <hr />
                 <div className="btn-group">
                     <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.toggleFormElement(e, false)}>Create</button>
