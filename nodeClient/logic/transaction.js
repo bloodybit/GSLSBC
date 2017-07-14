@@ -32,7 +32,7 @@ function createRawTrans(socialRecord, cb) {
     }
 
     console.log(1);
-    const data = convertDataToHex('addSocialRecord', socialRecord);
+    const data = convertDataToHex('updateSocialRecord', socialRecord);
 
     const txParams = {
         nonce,
@@ -90,6 +90,7 @@ function sendTransaction(transactionHash) {
             response.on('end', function() {
                 console.log(`Got a response!\n\n`);
 
+                console.log(str);
                 resolve(str);
             });
         });
