@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import jsonFile from 'jsonfile';
+
+import { createRawTrans, sendTransaction } from './../../../logic/transaction';
 
 import DragHere from '../drag-here.component.jsx';
 
@@ -11,6 +14,7 @@ class TransactionForm extends Component {
         }
         this.toggleFormElement = this.toggleFormElement.bind(this);
         this.sendTransactionToGsls = this.sendTransactionToGsls.bind(this);
+        this.setSocialRecord = this.setSocialRecord.bind(this);
     }
     
     toggleFormElement(e, show) {
@@ -21,7 +25,33 @@ class TransactionForm extends Component {
 
     sendTransactionToGsls(e) {
         e.preventDefault();
-        this.setState({buttonText: "Sending..."});
+        this.setState({buttonText: "Preparing..."});
+        let userAddress = null;
+
+        console.log(this);
+
+        const socialRecordUrl = this.state.socialRecord.path;
+
+        const self = this;
+        jsonFile.readFile(socialRecordUrl, function(err, socialRecord) {
+            if (err) {
+                console.error(err);
+            }
+            createRawTrans([socialRecord.globalID, JSON.stringify(socialRecord)], (err, rawTransaction) => {
+                if (err) {
+                    console.error(err);
+                }
+                console.log(socialRecord);
+                self.setState({buttonText: "Sending..."});
+                if (rawTransaction) {
+                    sendTransaction(rawTransaction);
+                }
+            });
+        });
+    }
+
+    setSocialRecord(socialRecord) {
+        this.setState({socialRecord});
     }
 
     render(){
@@ -34,7 +64,7 @@ class TransactionForm extends Component {
                     <button className="btn btn-warning btn-sm pull-right" onClick={(e) => this.toggleFormElement(e, true)}>Update</button>
                 </div>
                 <div id="error-box"></div>
-                <DragHere whatToDrag={"Drag Social Record here"}/>
+                <DragHere whatToDrag={"Drag Social Record here"} fileDragged={this.setSocialRecord}/>
                 <p className="lead">Transaction info:</p>
                 <div className="form-group">
                 <label htmlFor="project-description">Nonce:</label>
