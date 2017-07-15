@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
-import jsonFile from 'jsonfile';
-
-import { createRawTrans, sendTransaction, test } from './../../../logic/transaction';
-
 import DragHere from '../drag-here.component.jsx';
+
+import jsonFile from 'jsonfile';
+import { createRawTrans, sendTransaction, test, test2 } from './../../../logic/transaction';
 
 class TransactionForm extends Component {
     constructor() {
         super();
+        this.defaultButtonText = "Send to GSLS";
         this.state = {
-            buttonText: "Send to GSLS",
+            buttonText: this.defaultButtonText,
             showElement: false
         }
         this.toggleFormElement = this.toggleFormElement.bind(this);
         this.sendTransactionToGsls = this.sendTransactionToGsls.bind(this);
         this.setSocialRecord = this.setSocialRecord.bind(this);
         this.testContractCreation = this.testContractCreation.bind(this);
+        this.testECRecover = this.testECRecover.bind(this);
     }
     
     toggleFormElement(e, show) {
@@ -26,35 +27,40 @@ class TransactionForm extends Component {
 
     testContractCreation(e) {
         e.preventDefault();
-        test((contractAddress) => console.log(contractAddress));
+        test(e, (contractAddress) => console.log(contractAddress));
     }
-    
 
+    testECRecover(e) {
+        e.preventDefault();
+        test2(e, (userAddress) => console.log(userAddress));
+    }
+
+    
     sendTransactionToGsls(e) {
         e.preventDefault();
         this.setState({buttonText: "Preparing..."});
         let userAddress = null;
-
-        console.log(this);
-
-        const socialRecordUrl = this.state.socialRecord.path;
-
+        const socialRecord = this.state.socialRecord; // get the SR from the state
         const self = this;
-        jsonFile.readFile(socialRecordUrl, function(err, socialRecord) {
-            if (err) {
-                console.error(err);
-            }
-            createRawTrans([socialRecord.globalID, JSON.stringify(socialRecord)], (err, rawTransaction) => {
-                if (err) {
-                    console.error(err);
-                }
+
+        createRawTrans([socialRecord.globalID, JSON.stringify(socialRecord)])
+            .then(rawTransaction => {
                 console.log(socialRecord);
-                self.setState({buttonText: "Sending..."});
-                if (rawTransaction) {
-                    sendTransaction(rawTransaction);
-                }
+                self.setState({buttonText: "Sending..."}); 
+                return sendTransaction(rawTransaction);
+            })
+            .then(transactionHash => {
+                console.log(transactionHash);
+                self.setState({transactionHash: "Message sent successfully", buttonText: self.defaultButtonText});
+                
+            })
+            .catch(error => {
+                self.setState({errorMessage: error});
+            })
+            .catch(error => {
+                self.setState({errorMessage: error});
             });
-        });
+        
     }
 
     setSocialRecord(socialRecord) {
@@ -64,8 +70,10 @@ class TransactionForm extends Component {
     render(){
         return (
             <form className="add-poi-form">
+                <div className="error">{this.state.errorMessage}</div>
+                <div className="result">{this.state.transactionHash}</div>
                 <h3>New Transaction</h3>
-                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testContractCreation(e, false)}>Test</button>
+                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testECRecover(e, false)}>Test</button>
 
                 <hr />
                 <div className="btn-group">

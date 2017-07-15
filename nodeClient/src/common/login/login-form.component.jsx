@@ -23,8 +23,8 @@ class LoginForm extends Component {
         this.setState({ password: e.target.value });
     }
 
-    fileDragged(walletFile) {
-        this.setState({ walletUrl: walletFile.path });
+    fileDragged(walletData) {
+        this.setState({ walletData });
     }
     
     login(e) {
@@ -33,14 +33,25 @@ class LoginForm extends Component {
             loginText: "Loading your credentials...",
             redirectionTriggered: true
         });
+
         let self = this;
         console.log(self);
-        walletUtils.getWalletKey(this.state, function(wallet){
-            console.log(wallet);
-            window.currentWallet = wallet;
-            self.setState({redirect: true});
-            self.redirect();
-        });
+        if (this.state.password && this.state.walletData) {
+            walletUtils.getWalletKey(this.state.walletData, this.state.password, function(error, wallet){
+                if (error) {
+                    console.log(error);
+                    self.setState({errorMessage: "Invalid password or wallet file", loginText: "Login"})
+                } else {
+                    console.log(wallet);
+                    window.currentWallet = wallet; // set the wallet
+                    self.setState({redirect: true});
+                    self.redirect();
+                }
+            });
+        } else {
+            this.setState({errorMessage: "Elemets missing", loginText: "Login"});
+        }
+        
     }
 
     redirect() {
@@ -57,9 +68,8 @@ class LoginForm extends Component {
                     <label className="panel-login"><div className="login_result"></div></label>
                     <input type="password" className="form-control" placeholder="Wallet Password" id="password" onChange={this.handleChanges}/>
                     <DragHere whatToDrag={"Drag Wallet here"} fileDragged={this.fileDragged}/>
-                    <input type="submit" className="btn btn-lg btn-primary btn-block" name="submit" onClick={this.login} id="login" value={this.state.loginText} />
-                    <div id="loading-box"></div>
-                    <div id="error-box"></div>
+                    <input type="submit" className="btn btn-lg btn-primary btn-block" name="submit" onClick={this.login} value={this.state.loginText} />
+                    <div id="error-box" className="text-center">{this.state.errorMessage}</div>
                     {this.redirect()}
 
                 </fieldset>

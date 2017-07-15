@@ -7,25 +7,28 @@ class Home extends Component {
         super();
         this.state = {
             searchText: '',
-            searchResults: []
+            socialRecord: ''
         };
         this.gotResults = this.gotResults.bind(this);
         this.displayResults = this.displayResults.bind(this);
         console.log(window.currentWallet);
     }
 
-    gotResults(searchResults) {
+    gotResults(error, socialRecord) {
         // do something 
-
-        this.setState({searchResults});
-        this.displayResults();
+        if (error) {
+            this.setState({ errorMessage: error });
+        } else {
+            this.setState({ socialRecord });
+            this.displayResults();
+        }
     }
 
     displayResults() {
-        if(this.state.searchResults){
-            return (
-                <SearchResults results={this.state.searchResults}/>
-            );
+        if (this.state.socialRecord) {
+            return (<SearchResults socialRecord={ this.state.socialRecord }/>);
+        } else {
+            return (<SearchResults error={ this.state.errorMessage }/> );
         }
     }
 
@@ -33,8 +36,8 @@ class Home extends Component {
         return (
             <div className="animated fadeInUp" id="search-box-container">
                 <div className="row">
-                    <div className="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
-                        <SearchBar searchCallback={this.gotResults}/>
+                    <div className="col-xs-12 col-sm-8 col-md-8 col-lg-8 col-sm-offset-2 col-md-offset-2 col-lg-offset-2">
+                        <SearchBar searchCallback={ this.gotResults }/>
                         <hr />
                         {this.displayResults()}
                     </div>
