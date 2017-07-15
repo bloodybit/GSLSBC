@@ -100,6 +100,24 @@ Event though the implementation of Elliptic Curves or RSA keys would be a useful
 Nevertheless there are several proposals and RFCs both for RSA and Elliptic curves \citep{ECImplementation} \citep{RSAImplementation} and have been taken place suggestions of implementing asymmetric keys and many other features in the EVM2.0.
 Because of this lack the described process cannot be pursued.
 
+\begin{notation}
+	From here second draft of the possible approaches description
+	Needs to decide which one to maintain.
+\end{notation}
+
+\section{Dictionary / Nomenclature}
+\begin{notation}
+	TODO: Make it table
+\end{notation}
+User- The find entity that owns a social record, concrete it, upload, deliver or retrieve it.
+
+Server- The GSLS system can be converted to an Ethereum node with few more functionalities such as an API request interface listening for communication from the client.
+
+Blockchain - the Blockchain is referred as an entity where to store records with transactions.
+
+Transaction- Is an operation that aims at changing the status of the BC through authorized inputs.
+
+Contract - Operations that needs to be performed in particulars contracts when not specified in the doc contract and solidity contract are considered synonyms.
 
 \section{Use wallet without hosting an Ethereum Node}
 
@@ -112,3 +130,76 @@ The steps to follow are the same as the user participate in the blockchain with 
 This metodology is called offline transaction because the client can create and sign transactions with his ethereum account without running the node and so: being offline. The only limitation of this solution is that the transaction needs be signed with the private key of the account instead that with the usual combination of username - password created with the account.
 
 This could lead to suspicion over this authentication system because the common sense and the documentation suggests not to share the private key, it is important to notice that the private key is not shared to the server and will never leave the local environment.
+
+
+\section{Possible Approaches}
+\subsection{Keep the DHT and verify the authenticity of the Social Record with the blockchain}
+The first approach wants to be cheap and light.It will keep the DHT implementation and aims to integrate the Blockchain in order to detect malicious charges in the SR stared in the DHT itself.
+
+\subsubsection{How it works}
+\paragraph{Creation \& Update}
+
+This implementation does not require the client to host an Ethereal node, but needs a wallet per each user.
+
+The user needs to download a piece of software to run (eg. exe, epp).
+
+The software creates the Sonic Private Key and Sonic Public Key ( in case of a new user, otherwise will upload his keys), the user must save the private key in a secure location ( otherwise he will loose the possibility to change his SR).
+Then the social record is created /uploaded as always and stored in the DHT.
+The SR is then Hashed, resulting in a string of small dimension.
+The hash is then uploaded in the blockchain through the server in a Key value array with the Old as Key end the hash as a value.
+
+\paragraph{GET}
+
+When a user wants to retrieve information starting from a particular GlobalId, he has to pull the SR of that particular Global iD from the DHT and the hashes from Blockchain.
+
+If the hashes SR of the Blockchain is the same as the hashing of the retrieved from the DHT, the record is pure.
+
+This approach is valid and cheap since only the Hash of the entire SR is stared.
+Unfortunately, the solution can only detect unauthorised changes but not rollback from it.
+
+\subsection{Without DHT and Etherereum Accounts for the Users}
+This approach tries to merge the security and immutability of the Blockchain without forcing the User to have a wallet or Ethereum account nevertheless is important to keep in mind that the server that contacts the bc must move a node. In our prototype we can imagine the GSLS as a Server hosting in Ethereum Node and implementing some functionalities explained here bellow.
+
+\subsubsection{How it works}
+
+\paragraph{Creation}
+
+The user downloads the software, generates the Sonic Public and Private Key. Once the social record has been created, it is encrypted with the private Key and the following object is send to the server.
+
+(Global ID, Pub Key, Encrypted (SR))
+
+The server with the ( Server wallet) uploads the transaction to the blockchain. The contract stored in Ethereum will decrypt the encrypted SR and store the Key Value array with the Global Id as key and the object (Public key, SR version 1 ) as Value.
+
+\paragraph{Update}
+
+In order to update SR, the User application needs to retrieve the number of version, encrypt the number of version + 1 and send the following object to the server (that will update it to the blockchain). The Solidity contract will decrypt the version and check if it match the version +1 in the Blockchain , if it match, the SR can be decrypted as well and update the record in the BC.
+
+\paragraph{GET}
+
+Get is pretty trivied, asking for a Global Id, the SR will returned. This approach even if valid (although expension is not visible because of ….)
+
+\subsection{User with Ethereum Wallet}
+
+This approach require the Suers to have an Ethereal wallet but not to run an Ethereal node.
+This is optimal because it allows the users to update their credentials even without hybrid solutions that port of the the bc (such as ….) Ideally, it is possible to create and change the record even from a random hosting. Pc or mobile device.
+
+It is enough to provide the wallet file .j son file.
+
+\subsubsection{How it works}
+\paragraph{Creation \& Update}
+
+Once the wallet file json loaded on the application its is possible to create the social record, sign it with the private key; creating the transaction normally. This signed transaction is then uploaded to the server and then to the BC wallet file json.
+
+Json file with the private key of the Ethereum wallet account ( and other information).
+
+In a Key Value array as follow Gid-SR
+
+\paragraph{GET}
+
+(same as previous)
+\begin{Notation}
+
+Needs to be done
+end{Notation}
+
+This approach force the users to deliver an Ethereal wallet but it conceptually more correct because it uses the offline transaction from —— link to yellow white paper.
