@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
+import jsonFile from 'jsonfile';
+
+// Utility method
+String.prototype.isJsonFile = function(){
+    return this.endsWith('.json');
+}
 
 class DragHere extends Component {
     constructor() {
@@ -12,12 +18,23 @@ class DragHere extends Component {
 
     onDrop(acceptedFiles, rejectedFiles) {
         console.log(acceptedFiles);
-        this.setState({whatToDrag: acceptedFiles[0].name});
-        if(this.props.fileDragged) {
-            this.props.fileDragged(acceptedFiles[0]);
+        acceptedFiles = acceptedFiles[0]; // consider only the first
+        this.setState({whatToDrag: acceptedFiles.name});
+        let self = this;
+        if (this.props.fileDragged && acceptedFiles.name.isJsonFile()) {
+            
+            jsonFile.readFile(acceptedFiles.path, function(err, file) {
+                if (err) {
+                    console.error("ERROR: ",err);
+                } 
+                // call back function
+                console.log("File read", file);
+                self.props.fileDragged(file);
+            });
+        } else {
+            console.error("ERROR: No callback function has been specified, or the file is not json");
         }
     }
-  
 
     render(){
         return (

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import { getSocialRecord } from './../../../logic/transaction';
 
 class SearchBar extends Component {
     
     constructor() {
         super();
+        this.defaultButtonText = 'Search';
         this.state = {
-            buttonText: 'Search',
+            buttonText: this.defaultButtonText,
             searchText: ''
             
         };
@@ -21,7 +23,19 @@ class SearchBar extends Component {
     searchSocialRecord(e) {
         e.preventDefault();
         this.setState({ buttonText: "Searching..." });
+
+        let self = this;
+
         console.log("input", this.state.searchText);
+        getSocialRecord(this.state.searchText)
+        .then(socialRecord => {
+            self.setState({buttonText: self.defaultButtonText});
+            self.props.searchCallback(null, socialRecord);
+        })
+        .catch(error => {
+            self.props.searchCallback(error, null);
+        })
+
         
         // TODO: make query...
         let searchResults = [{
@@ -34,7 +48,6 @@ class SearchBar extends Component {
             profile: "www.facebook.com/bob"
         }]
 
-        this.props.searchCallback(searchResults);
     }
 
     render(){

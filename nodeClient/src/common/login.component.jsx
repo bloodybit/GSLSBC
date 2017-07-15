@@ -6,7 +6,8 @@ class Login extends Component {
         return (
             <div className="container" id="login">
             <div id="background"></div>
-            <div className="row vertical-offset-100">
+            <div className="row vertical-offset-50"> 
+                {/*vertical-offset-100*/}
                 <div className="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
                     <div className="panel panel-default animated fadeInDown">
                         <div className="panel-heading">

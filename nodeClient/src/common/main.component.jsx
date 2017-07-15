@@ -7,7 +7,7 @@ class Main extends Component {
         return (
             <div className="animated fadeInUp">
                 <div className="row">
-                    <div className="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
+                    <div className="col-xs-12 col-sm-8 col-md-8 col-lg-8 col-sm-offset-2 col-md-offset-2 col-lg-offset-2">
                         <TransactionForm />
                     </div>
                 </div>
