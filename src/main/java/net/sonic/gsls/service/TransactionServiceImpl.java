@@ -31,6 +31,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Value("${wallet-file}")
     private String walletFile;
+    @Value("${wallet-password}")
+    private String walletPassword;
+
     @Value("${contract-address}")
     private String contractAddress;
 
@@ -55,7 +58,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     public SocialRecord loadContract() throws IOException, CipherException {
 
-        Credentials credentials = WalletUtils.loadCredentials("test", walletFile);
+        Credentials credentials = WalletUtils.loadCredentials(walletPassword, walletFile);
 
         SocialRecord contract = SocialRecord.load(
                 contractAddress, web3j, credentials, GAS_PRICE, GAS_LIMIT);
