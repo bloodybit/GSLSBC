@@ -1,16 +1,20 @@
 package net.sonic.gsls.controller;
 
 import net.sonic.gsls.config.Config;
-import net.sonic.gsls.model.SocialRecord;
+import net.sonic.gsls.service.TransactionService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.web3j.crypto.CipherException;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Main class for GSLS REST interface
@@ -24,6 +28,9 @@ import java.net.URISyntaxException;
 public class RestService
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RestService.class);
+
+	@Autowired
+	private TransactionService transactionService;
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> index() throws URISyntaxException
@@ -78,6 +85,28 @@ public class RestService
 		response.put("message", "");
 		
 		return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
+	}
+
+
+	@RequestMapping(value = "/transaction/raw/{hexValue}", method = RequestMethod.POST)
+	public String sendRawTransaction(@PathVariable("hexValue") String hexValue) throws ExecutionException, InterruptedException {
+
+		String transactionHash = transactionService.sendRawTransaction(hexValue);
+
+		return transactionHash;
+
+	}
+
+	@RequestMapping(value = "socialRecord/{globalID}", method = RequestMethod.GET)
+	public String getSocialRecord(@PathVariable("globalID") String globalID) throws IOException, CipherException, ExecutionException, InterruptedException {
+
+		String socialRecord = transactionService.getSocialRecord(globalID);
+
+		if (socialRecord != null) {
+			return socialRecord;
+		}
+
+		return "Social Record not found";
 	}
 	
 	/**
