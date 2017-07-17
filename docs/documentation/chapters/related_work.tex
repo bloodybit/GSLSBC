@@ -9,11 +9,11 @@ A distributed hash table (DHT) is a class of a decentralised distributed system 
 
 \subsection{DHT characteristics}
 \begin{list}{}{}
-\item \emph{Autonomy and decentralization}: multiple nodes, no central coordinator;
-\item \emph{Fault tolerance}: reliable, no single point of failure (like Napster’s central server) (Byzantine fault tolerance);
-\item \emph{Scalability}: the system scales. This means it’s working efficiently regardless the workload;
-\item \emph{Load balancing} (optional);
-\item \emph{Data integrity} (optional).
+\item {Autonomy and decentralization}: multiple nodes, no central coordinator;
+\item {Fault tolerance}: reliable, no single point of failure (like Napster’s central server) (Byzantine fault tolerance);
+\item {Scalability}: the system scales. This means it’s working efficiently regardless the workload;
+\item {Load balancing} (optional);
+\item {Data integrity} (optional).
 \end{list}
 
 \subsection{Functioning Example}
@@ -111,6 +111,14 @@ ECC is the next generation of public key cryptography, and based on currently un
 With ECC, you can use smaller keys to get the same levels of security. Small keys are important, especially in a world where more and more cryptography is done on less powerful devices like mobile phones. While multiplying two prime numbers together is easier than factoring the product into its component parts, when the prime numbers start to get very long, even just the multiplication step can take some time on a low powered device. While you could likely continue to keep RSA secure by increasing the key length, that comes with a cost of slower cryptographic performance on the client. ECC appears to offer a better tradeoff: high security with short, fast keys.
 
 \subsection{RSA}
-\begin{notation}
-	Write something about RSA?
-\end{notation}
+RSA algorithm, along with the Diffie-Hellman represented the first viable cryptographic schemes where security was based on the theory of numbers; it was the first to enable secure communication between two parties without a shared secret.
+Modern cryptography is founded on the idea that the key that you use to encrypt your data can be made public while the key that is used to decrypt your data can be kept private.
+
+The algorithm multiplies two prime numbers. If multiplication is the easy algorithm, its difficult pair algorithm is factoring the product of the multiplication into its two component primes. Algorithms that have this characteristic—easy in one direction, hard the other—are known as trapdoor functions. Finding a good trapdoor function is critical to making a secure public key cryptographic system.
+
+Its security relies on the fact that factoring is slow and multiplication is fast. In general, a public key encryption system has two components, a public key and a private key. Encryption works by taking a message and applying a mathematical operation to it to get a random-looking number. Decryption takes the random looking number and applies a different operation to get back to the original number. Encryption with the public key can only be undone by decrypting with the private key.
+
+In RSA, this maximum value (call it max) is obtained by multiplying two random prime numbers. The public and private keys are two specially chosen numbers that are greater than zero and less than the maximum value (call them pub and priv). To encrypt a number, you multiply it by itself pub times, making sure to wrap around when you hit the maximum. To decrypt a message, you multiply it by itself priv times, and you get back to the original number.
+
+Specialized algorithms like the Quadratic Sieve and the General Number Field Sieve were created to tackle the problem of prime factorization and have been moderately successful. As the resources available to decrypt numbers increase, the size of the keys needs to grow even faster. This is not a sustainable situation for mobile and low-powered devices that have limited computational power.
+

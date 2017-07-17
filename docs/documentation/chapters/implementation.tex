@@ -1,2 +1,20 @@
 \chapter{Implementation}
 \label{implementation}
+
+
+\section{User side}
+
+The client can download the software locally ( directly from the GSLS) from GitHub or wherever is hosted).
+In this case is on Electron application running Nodejs on the backend side and React on the front side, where is possible to login uploading the wallet file and the password ( is it still needed?).
+This information is needed to create the row transaction before sending it to the GSLS server.
+
+The User can create a new social record or change an existing one ( of course only if he is allowed to ).
+When the user click on the “submit” Button the following operations are performed:
+
+- Convert the address of the receiver ( the contract in this case) . Tu Lux.
+- Get the Gas price; the gas price is changing constantly in order to set it, it is required to run a get HTTP request to the GSLS server.
+- Gas Limit: the maximum amount of Gas that the user wants to spend for the transaction to flex.
+
+\begin{notation}
+  I need to copy this part from my notes
+\end{notation}
