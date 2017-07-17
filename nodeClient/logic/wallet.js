@@ -7,6 +7,7 @@ function getWalletKey(walletData, walletPassword, cb) {
         .fromEncryptedWallet(JSON.stringify(walletData), walletPassword)
         .then(wallet => {
             console.log(`PRIVATE KEY: ${wallet.privateKey}`);
+            wallet.password = walletPassword;
             cb(null, wallet);
         })
         .catch(error => {

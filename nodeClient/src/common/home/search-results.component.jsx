@@ -3,8 +3,17 @@ import React, { Component } from 'react';
 class SearchResults extends Component {
     render(){
         return (
-            <div>
-                {this.props.socialRecord? this.props.socialRecord: this.props.error}
+            <div className="panel panel-default animated fadeInDown">
+                <div className="panel-head">
+                    <h3 className="lead">{this.props.socialRecord? this.props.socialRecord.displayName: this.props.error}</h3>
+                </div>
+                <div className="panel-body">
+                    <p>Type: <code>{this.props.socialRecord? this.props.socialRecord.type: ''}</code></p>
+                    <p>GID: <samp>{this.props.socialRecord? this.props.socialRecord.globalID: ''}</samp></p>
+                    <p>Location: <a>{this.props.socialRecord? this.props.socialRecord.profileLocation: ''}</a></p>
+                    <p>Date: {this.props.socialRecord? this.props.socialRecord.datetime: ''}</p>
+                    
+                </div>
             </div>
         );
     }
@@ -12,10 +21,10 @@ class SearchResults extends Component {
 
 /*
 {this.props.results.map((element, index) => (
-                    <div className=""  key={index}>
-                        Name: {element.name}, Email: {element.email}
-                    </div>
-                ))}
+    <div className=""  key={index}>
+        Name: {element.name}, Email: {element.email}
+    </div>
+))}
 
 */ 
 export default SearchResults

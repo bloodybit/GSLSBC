@@ -15,7 +15,6 @@ class Home extends Component {
     }
 
     gotResults(error, socialRecord) {
-        // do something 
         if (error) {
             this.setState({ errorMessage: error });
         } else {
@@ -39,7 +38,7 @@ class Home extends Component {
                     <div className="col-xs-12 col-sm-8 col-md-8 col-lg-8 col-sm-offset-2 col-md-offset-2 col-lg-offset-2">
                         <SearchBar searchCallback={ this.gotResults }/>
                         <hr />
-                        {this.displayResults()}
+                        {this.state.socialRecord? this.displayResults(): ''}
                     </div>
                 </div>
             </div>

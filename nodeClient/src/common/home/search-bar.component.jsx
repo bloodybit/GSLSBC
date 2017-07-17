@@ -28,26 +28,24 @@ class SearchBar extends Component {
 
         console.log("input", this.state.searchText);
         getSocialRecord(this.state.searchText)
-        .then(socialRecord => {
-            self.setState({buttonText: self.defaultButtonText});
-            self.props.searchCallback(null, socialRecord);
-        })
-        .catch(error => {
-            self.props.searchCallback(error, null);
-        })
-
+            .then(socialRecord => {
+                self.setState({buttonText: self.defaultButtonText});
+                self.props.searchCallback(null, socialRecord);
+            })
+            .catch(error => {
+                self.props.searchCallback(error, null);
+            });
         
         // TODO: make query...
-        let searchResults = [{
-            name: "Alice", 
-            mail: "alice@mail.com",
-            profile: "www.facebook.com/alice"
-        }, {
-            name: "Bob", 
-            mail: "bob@mail.com",
-            profile: "www.facebook.com/bob"
-        }]
-
+        // let searchResults = [{
+        //     name: "Alice", 
+        //     mail: "alice@mail.com",
+        //     profile: "www.facebook.com/alice"
+        // }, {
+        //     name: "Bob", 
+        //     mail: "bob@mail.com",
+        //     profile: "www.facebook.com/bob"
+        // }]
     }
 
     render(){

@@ -15,8 +15,69 @@ const GSLS_ADDRESS = config.contractAddress; // SOCIAL RECORD CONTRACT GETH
 
 const web3 = new Web3();
 
-// TODO: REmove this
+// TODO: Remove this
 web3.setProvider(new web3.providers.HttpProvider());
+
+// set up event watchers 
+const SocialRecordAdded = getGSLS().SocialRecordAdded({ fromBlock: 0, toBlock: 'latest' });
+// const SocialRecordUpdated = getGSLS().SocialRecordUpdated({ fromBlock: 0, toBlock: 'latest' });
+
+let eventsList = {
+    'SocialRecordAdded': SocialRecordAdded
+        // 'SocialRecordUpdated': SocialRecordUpdated
+}
+
+SocialRecordAdded.get((error, result) => {
+    if (error) {
+        console.error("ERROR: ", error);
+    } else {
+        console.log("RESULT: ", result.args);
+    }
+});
+
+// SocialRecordUpdated.get((error, result) => {
+//     if (error) {
+//         console.error("ERROR: ", error);
+//     } else {
+//         console.log("RESULT: ", result.args);
+//     }
+// });
+
+function subscribeToEvent(eventName, cb) {
+    console.log(eventName);
+    if (eventName.constructor === Array) {
+        eventName.forEach(function(name) {
+            eventsList[name].watch((error, result) => {
+                if (error) {
+                    console.error("ERROR: ", error);
+                    cb(error, null);
+                } else {
+                    console.log("RESULT: ", result.args);
+                    cb(null, result.args);
+                }
+            });
+        });
+    } else {
+        console.log("not array");
+        eventsList[eventName].watch((error, result) => {
+            if (error) {
+                console.error("ERROR: ", error);
+                cb(error, null);
+            } else {
+                console.log("RESULT: ", result.args);
+                cb(null, result.args);
+            }
+        });
+    }
+}
+
+function getGSLS() {
+    return web3.eth.contract(socialRecordContract.abi).at(config.contractAddress);
+}
+
+function unlockAccount() {
+    web3.personal.unlockAccount(window.currentWallet.address, window.currentWallet.password);
+}
 
 function createRawTrans(socialRecordData) {
     return new Promise((resolve, reject) => {
@@ -178,11 +239,81 @@ function test2(e, cd) {
         req.write(JSON.stringify(toSend));
         req.end();
     });
+}
 
+function addSocialRecord(globalID, socialRecordBody) {
+
+    unlockAccount();
+
+    return new Promise(function(resolve, reject) {
+        getGSLS().addSocialRecord(globalID, socialRecordBody, { from: window.currentWallet.address, gas: 4700000 },
+            function(error, txAddr) {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                } else {
+                    console.log(txAddr);
+                    resolve(txAddr);
+                }
+            })
+    });
+}
+
+function updateSocialRecord(globalID, socialRecordBody) {
+    console.info("INFO: ", updateSocialRecord.name);
+    unlockAccount();
+
+    return new Promise(function(resolve, reject) {
+        const SocialRecordUpdated = getGSLS().SocialRecordUpdated({ fromBlock: 0, toBlock: 'latest' });
+
+        getGSLS().updateSocialRecord(globalID, socialRecordBody, { from: window.currentWallet.address, gas: 4700000 },
+            function(error, txAddr) {
+                if (error)
+                    reject(error);
+            });
+
+        SocialRecordUpdated.watch((error, event) => {
+            if (error) {
+                console.error("ERROR: ", error);
+                reject(error);
+            } else {
+                console.log("RESULT: ", event.args);
+                resolve(event.args)
+            }
+        });
+
+    });
 }
 
 function getSocialRecord(globalID) {
-    console.log(`Sending the transaction...`);
+    return new Promise(function(resolve, reject) {
+        getGSLS().getSocialRecord(globalID, { from: window.currentWallet.address }, function(error, socialRecord) {
+            if (error) {
+                console.log(error);
+                reject(error);
+            } else {
+                console.log(socialRecord);
+                resolve(JSON.parse(socialRecord));
+            }
+        })
+    });
+}
+
+export {
+    addSocialRecord,
+    createRawTrans,
+    getSocialRecord,
+    sendTransaction,
+    subscribeToEvent,
+    test,
+    test2,
+    updateSocialRecord
+};
+
+
+/*
+
+console.log(`Sending the transaction...`);
 
     var options = {
         host: 'localhost',
@@ -210,6 +341,5 @@ function getSocialRecord(globalID) {
 
         req.end();
     });
-}
 
-export { createRawTrans, sendTransaction, test, test2, getSocialRecord };
+*/

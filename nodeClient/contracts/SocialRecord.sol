@@ -56,8 +56,8 @@ contract SocialRecord {
     }
 
     // Events
-    event SocialRecordAdded(address user, string globalId);
-    event SocialRecordUpdated(address updater, string globalId);
+    event SocialRecordAdded(address user, string globalId, string socialRecordString);
+    event SocialRecordUpdated(address updater, string globalId, string socialRecordString);
     event SocialReocordDeleted(address deleter, string globalId);
 
     // add a Social Record: only a non-user can create it and the globalId has to be new. 
@@ -69,7 +69,7 @@ contract SocialRecord {
 
         srs[_globalId] = SR(_socialRecordString, true);
         users[msg.sender] = User(_globalId, true);
-        SocialRecordAdded(msg.sender, _globalId);
+        SocialRecordAdded(msg.sender, _globalId, _socialRecordString);
         
         return(true, _socialRecordString);
     }
@@ -89,18 +89,18 @@ contract SocialRecord {
     function updateSocialRecord(string _globalId, string _socialRecordString) returns (bool, string){
         
         // the user is the owner of the social record 
-        // if (sha3(users[msg.sender].globalId) != sha3(_globalId)) {
-        //     return false; 
-        // }
+        if (sha3(users[msg.sender].globalId) != sha3(_globalId)) {
+            return (false, "This account is not allowed to modify the social record corresponding to the specified global id"); 
+        }
 
         // the Social Record must exist
         if (!srs[_globalId].exists)  {
-            return (false, ""); 
+            return (false, "The specified social record doesn't exist"); 
         }
 
         srs[_globalId] = SR(_socialRecordString, true);
         // Trigger the event
-        SocialRecordUpdated(msg.sender, _globalId);
+        SocialRecordUpdated(msg.sender, _globalId, _socialRecordString);
         return (true, _socialRecordString); 
     }
 
