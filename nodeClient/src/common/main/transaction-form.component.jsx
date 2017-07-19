@@ -132,8 +132,8 @@ class TransactionForm extends Component {
                 <div className="error">{this.state.errorMessage}</div>
                 <div className="result">{this.state.transactionHash}</div>
                 <h3>New Transaction</h3>
-                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testECRecover(e)}>EC REC</button>
-                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testContractCreation(e)}>CONTR</button>
+                {/* <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testECRecover(e)}>EC REC</button>
+                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testContractCreation(e)}>CONTR</button> */}
 
                 <hr />
                 <div className="btn-group">

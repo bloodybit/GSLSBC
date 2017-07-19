@@ -121,7 +121,7 @@ public class RestService {
         JSONObject response = new JSONObject();
 
         response.put("status", 200);
-        response.put("nonce", nonce);
+        response.put("message", "{\"nonce\":" +nonce+"}");
 
         return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }

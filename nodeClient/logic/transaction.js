@@ -91,49 +91,52 @@ function createRawTrans(functionName, socialRecordData) {
             reject('ERROR: No wallet set');
         }
         // TODO: Take it from the GSLS
-        let nonce = web3.toHex(web3.eth.getTransactionCount(window.currentWallet.address));
+        let nonce = ''; //web3.toHex(web3.eth.getTransactionCount(window.currentWallet.address));
         let gasPrice = web3.toHex(web3.eth.gasPrice);
         let gasLimit = web3.toHex(4700000);
 
         // get the account nonce from the GSLS
-        // Api
-        //     .get(`http://localhost:8080/accounts/${window.currentWallet.address}/nonce`)
-        //     .then(gslsNonce => {
-        //         console.info(`Nonce ${gslsNonce} retrived from GSLS`);
-        //         nonce = gslsNonce;
-        //     })
-        //     .catch(error => {
-        //         console.error(`ERROR: `, error);
-        //         reject(`ERROR: The GSLS wasn't ablet to return the nonce`)
-        //     });
+        Api
+            .get(`${config.gsls}/account/${window.currentWallet.address}/nonce`)
+            .then(response => {
+                console.info(`Nonce ${response.nonce} retrived from GSLS`);
+                nonce = web3.toHex(response.nonce);
 
-        if (!(nonce && gasPrice && gasLimit)) {
-            reject('ERROR: Parameters are missed or not generated');
-        }
+                if (!(nonce && gasPrice && gasLimit)) {
+                    reject('ERROR: Parameters are missed or not generated');
+                }
 
-        const transactionPayload = convertDataToHex(functionName, socialRecordData);
+                const transactionPayload = convertDataToHex(functionName, socialRecordData);
 
-        const txParams = {
-            nonce,
-            gasPrice,
-            gasLimit,
-            to: GSLS_ADDRESS,
-            value: '0x00',
-            data: transactionPayload,
-            // EIP 155 chainId - mainnet: 1, ropsten: 3
-            chainId: 3
-        }
+                const txParams = {
+                    nonce,
+                    gasPrice,
+                    gasLimit,
+                    to: GSLS_ADDRESS,
+                    value: '0x00',
+                    data: transactionPayload,
+                    // EIP 155 chainId - mainnet: 1, ropsten: 3
+                    chainId: 3
+                }
 
-        console.info(`INFO:`, txParams);
+                console.info(`INFO:`, txParams);
 
-        let tx = new Transaction(txParams);
-        let privateKey = Buffer.from(window.currentWallet.privateKey.substr(2), 'hex');
-        tx.sign(privateKey);
+                let tx = new Transaction(txParams);
+                let privateKey = Buffer.from(window.currentWallet.privateKey.substr(2), 'hex');
+                tx.sign(privateKey);
 
-        let serializedTx = `0x${tx.serialize().toString('hex')}`;
-        console.info(`INFO: ${serializedTx}`);
+                let serializedTx = `0x${tx.serialize().toString('hex')}`;
+                console.info(`INFO: ${serializedTx}`);
 
-        resolve(serializedTx);
+                resolve(serializedTx);
+
+            })
+            .catch(error => {
+                console.error(`ERROR: `, error);
+                reject(`ERROR: The GSLS wasn't ablet to return the nonce`)
+            });
+
+
     });
 }
 
@@ -149,7 +152,7 @@ function convertDataToHex(functionName, values) {
 
 // send the raw transaction to the GSLS
 function sendTransaction(transactionHash) {
-    return Api.post('http://localhost:8080/rawtransaction/', transactionHash);
+    return Api.put(`${config.gsls}/socialrecord`, transactionHash);
 }
 
 function test(e, cb) {
@@ -312,7 +315,7 @@ function getSocialRecord(globalID) {
     // });
 
     // call the api
-    return Api.get(`http://localhost:8080/socialrecord/${globalID}`);
+    return Api.get(`${config.gsls}/socialrecord/${globalID}`);
 }
 
 export {

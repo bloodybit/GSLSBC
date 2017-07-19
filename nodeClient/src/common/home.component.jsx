@@ -18,6 +18,7 @@ class Home extends Component {
         if (error) {
             this.setState({ errorMessage: error });
         } else {
+            console.log(socialRecord);
             this.setState({ socialRecord });
             this.displayResults();
         }

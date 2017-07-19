@@ -30,10 +30,10 @@ let Api = (function() {
                 });
 
                 response.on('end', function() {
-                    console.log(`Got a response!\n\n`);
-
                     console.log(str);
-                    resolve(JSON.parse(str));
+                    let message = JSON.parse(str).message;
+                    console.log("message: ", message);
+                    resolve(JSON.parse(message));
                 });
             });
 
@@ -41,10 +41,10 @@ let Api = (function() {
         });
     }
 
-    function post(url, body) {
+    function put(url, body) {
 
         let parsedUrl = URL.parse(url);
-        options.method = 'POST';
+        options.method = 'PUT';
         options.host = parsedUrl.hostname;
         options.port = parsedUrl.port;
         options.path = parsedUrl.pathname;
@@ -57,10 +57,11 @@ let Api = (function() {
                 });
 
                 response.on('end', function() {
-                    console.log(`Got a response!\n\n`);
-
                     console.log(str);
-                    resolve(JSON.parse(str));
+                    let message = JSON.parse(str).message;
+                    console.log("message: ", message);
+
+                    resolve(JSON.parse(message));
                 });
             });
             req.write(body);
@@ -70,7 +71,7 @@ let Api = (function() {
 
     return {
         get,
-        post
+        put
     }
 
 })();
