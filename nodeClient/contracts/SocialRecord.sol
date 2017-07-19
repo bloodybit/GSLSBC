@@ -61,7 +61,7 @@ contract SocialRecord {
     event SocialReocordDeleted(address deleter, string globalId);
 
     // receives an hash and the signature parameters. With these it gets the signer address. 
-    function verify2(bytes32 _hash, uint8 _v, bytes32 _r, bytes32 _s) constant returns(address signerAddr) {
+    function verify(bytes32 _hash, uint8 _v, bytes32 _r, bytes32 _s) constant returns(address signerAddr) {
         signerAddr = ecrecover(_hash, _v, _r, _s);
     }
 
