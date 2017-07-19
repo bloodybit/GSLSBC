@@ -54,7 +54,9 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         if (ethSendTransaction != null) {
-            System.out.println(ethSendTransaction.getTransactionHash());
+            String transactionHash = ethSendTransaction.getTransactionHash();
+            System.out.println(transactionHash);
+            return transactionHash;
         }
 
         return null;
