@@ -8,6 +8,8 @@ import * as _ from 'lodash'; // utility functions
 
 import secp256k1 from 'secp256k1';
 import ethUtils from 'ethereumjs-util';
+import { Api } from './api';
+
 const SolidityFunction = require('web3/lib/web3/function'); // hex converter
 const socialRecordContract = require('../build/contracts/SocialRecord.json'); // social record contract
 const config = require('../resources/config');
@@ -310,31 +312,33 @@ function getSocialRecord(globalID) {
     // });
 
 
-    let options = {
-        host: 'localhost',
-        path: '/socialrecord/' + globalID,
-        //since we are listening on a custom port, we need to specify it by hand
-        port: '8080',
-        //This is what changes the request to a POST request
-        method: 'GET'
-    };
+    // let options = {
+    //     host: 'localhost',
+    //     path: '/socialrecord/' + globalID,
+    //     //since we are listening on a custom port, we need to specify it by hand
+    //     port: '8080',
+    //     //This is what changes the request to a POST request
+    //     method: 'GET'
+    // };
 
-    return new Promise((resolve, reject) => {
-        let req = http.request(options, (response) => {
-            var str = ''
-            response.on('data', function(chunk) {
-                str += chunk;
-            });
+    // return new Promise((resolve, reject) => {
+    //     let req = http.request(options, (response) => {
+    //         var str = ''
+    //         response.on('data', function(chunk) {
+    //             str += chunk;
+    //         });
 
-            response.on('end', function() {
-                console.log(`Got a response!\n\n`);
+    //         response.on('end', function() {
+    //             console.log(`Got a response!\n\n`);
 
-                console.log(str);
-                resolve(JSON.parse(str));
-            });
-        });
-        req.end();
-    });
+    //             console.log(str);
+    //             resolve(JSON.parse(str));
+    //         });
+    //     });
+    //     req.end();
+    // });
+
+    return Api.get(`localhost:8080/socialrecord/${globalID}`);
 }
 
 export {
