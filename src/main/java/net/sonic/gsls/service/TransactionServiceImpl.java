@@ -10,9 +10,12 @@ import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.ExecutionException;
 
 import static org.web3j.tx.Contract.GAS_LIMIT;
@@ -39,26 +42,66 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
-    public String sendRawTransaction(String hexValue) throws ExecutionException, InterruptedException {
+    public String sendRawTransaction(String hexValue) {
 
-       EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).sendAsync().get();
+        EthSendTransaction ethSendTransaction = null;
+        try {
+            ethSendTransaction = web3j.ethSendRawTransaction(hexValue).sendAsync().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
-       String transactionHash = ethSendTransaction.getTransactionHash();
-        System.out.println(transactionHash);
-        return transactionHash;
+        if (ethSendTransaction != null) {
+            System.out.println(ethSendTransaction.getTransactionHash());
+        }
+
+        return null;
     }
 
     @Override
-    public String getSocialRecord(String globalID) throws IOException, CipherException, ExecutionException, InterruptedException {
+    public String getSocialRecord(String globalID) {
 
-        SocialRecord contract = loadContract();
-        return contract.getSocialRecord(new Utf8String(globalID)).get().toString();
+        try {
+            return loadContract().getSocialRecord(new Utf8String(globalID)).get().toString();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public BigInteger getNonce(String address) {
+
+        EthGetTransactionCount ethGetTransactionCount = null;
+        try {
+            ethGetTransactionCount = web3j.ethGetTransactionCount(
+                    address, DefaultBlockParameterName.LATEST).sendAsync().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+
+        return nonce;
     }
 
 
-    public SocialRecord loadContract() throws IOException, CipherException {
+    public SocialRecord loadContract() {
 
-        Credentials credentials = WalletUtils.loadCredentials(walletPassword, walletFile);
+        Credentials credentials = null;
+        try {
+            credentials = WalletUtils.loadCredentials(walletPassword, walletFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CipherException e) {
+            e.printStackTrace();
+        }
 
         SocialRecord contract = SocialRecord.load(
                 contractAddress, web3j, credentials, GAS_PRICE, GAS_LIMIT);
