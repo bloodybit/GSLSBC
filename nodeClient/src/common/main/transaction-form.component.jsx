@@ -129,7 +129,8 @@ class TransactionForm extends Component {
                 <div className="error">{this.state.errorMessage}</div>
                 <div className="result">{this.state.transactionHash}</div>
                 <h3>New Transaction</h3>
-                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testContractCreation(e, false)}>Test</button>
+                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testECRecover(e, false)}>EC REC</button>
+                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testContractCreation(e, false)}>CONTR</button>
 
                 <hr />
                 <div className="btn-group">
@@ -147,7 +148,8 @@ class TransactionForm extends Component {
                     <label htmlFor="project-description">GlobalID:</label>
                     <input type="text" className="form-control" id="sr-gloabal-id" placeholder="Global ID..." onChange={ this.handleChange }/>
                 </div> 
-                    <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.createSocialRecord}>{this.state.buttonText}</button>
+                    {/* <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.createSocialRecord}>{this.state.buttonText}</button> */}
+                     <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button> 
                     <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? '' : 'hidden'} onClick={this.updateSocialRecord}>{this.state.buttonText}</button>
             </form>
         );

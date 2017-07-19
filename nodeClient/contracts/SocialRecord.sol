@@ -61,17 +61,8 @@ contract SocialRecord {
     event SocialReocordDeleted(address deleter, string globalId);
 
     // receives an hash and the signature parameters. With these it gets the signer address. 
-    function verify(string memory _hash, uint8 _v, string memory _r, string memory _s) returns(address retAddr) {
-        bytes32 hash;
-        bytes32 r;
-        bytes32 s;
-        assembly {
-            hash := mload(add(_hash, 32))
-            r := mload(add(_r, 32))
-            s := mload(add(_s, 32))
-        }
-
-        retAddr = ecrecover(hash, _v, r, s);
+    function verify2(bytes32 _hash, uint8 _v, bytes32 _r, bytes32 _s) constant returns(address signerAddr) {
+        signerAddr = ecrecover(_hash, _v, _r, _s);
     }
 
     // add a Social Record: only a non-user can create it and the globalId has to be new. 
