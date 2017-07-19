@@ -11,9 +11,9 @@ import java.util.concurrent.ExecutionException;
  */
 public interface TransactionService {
 
-    String sendRawTransaction(String hexValue) throws ExecutionException, InterruptedException;
+    String sendRawTransaction(String hexValue);
 
-    String getSocialRecord(String globalID) throws IOException, CipherException, ExecutionException, InterruptedException;
+    String getSocialRecord(String globalID);
 
     BigInteger getNonce(String address);
 

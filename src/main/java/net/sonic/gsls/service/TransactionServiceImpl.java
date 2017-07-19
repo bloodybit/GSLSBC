@@ -42,19 +42,36 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
-    public String sendRawTransaction(String hexValue) throws ExecutionException, InterruptedException {
+    public String sendRawTransaction(String hexValue) {
 
-        EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).sendAsync().get();
+        EthSendTransaction ethSendTransaction = null;
+        try {
+            ethSendTransaction = web3j.ethSendRawTransaction(hexValue).sendAsync().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
-        String transactionHash = ethSendTransaction.getTransactionHash();
-        System.out.println(transactionHash);
-        return transactionHash;
+        if (ethSendTransaction != null) {
+            System.out.println(ethSendTransaction.getTransactionHash());
+        }
+
+        return null;
     }
 
     @Override
-    public String getSocialRecord(String globalID) throws IOException, CipherException, ExecutionException, InterruptedException {
+    public String getSocialRecord(String globalID) {
 
-        return loadContract().getSocialRecord(new Utf8String(globalID)).get().toString();
+        try {
+            return loadContract().getSocialRecord(new Utf8String(globalID)).get().toString();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override
@@ -75,9 +92,16 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
-    public SocialRecord loadContract() throws IOException, CipherException {
+    public SocialRecord loadContract() {
 
-        Credentials credentials = WalletUtils.loadCredentials(walletPassword, walletFile);
+        Credentials credentials = null;
+        try {
+            credentials = WalletUtils.loadCredentials(walletPassword, walletFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CipherException e) {
+            e.printStackTrace();
+        }
 
         SocialRecord contract = SocialRecord.load(
                 contractAddress, web3j, credentials, GAS_PRICE, GAS_LIMIT);
