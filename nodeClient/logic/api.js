@@ -1,21 +1,22 @@
-const { URL } = require('url');
+const URL = require('url');
 import * as http from 'http'; // http requests 
+
+console.log(URL);
 
 let Api = (function() {
 
-    var options = {
+    let options = {
         host: 'localhost',
-        path: '/socialrecord/' + globalID,
+        path: '/socialrecord/',
         //since we are listening on a custom port, we need to specify it by hand
         port: '8080',
         //This is what changes the request to a POST request
         method: 'GET'
     };
 
-    this.get = function(url) {
+    function get(url) {
 
-        let parsedUrl = new URL(url);
-        console.log();
+        let parsedUrl = URL.parse(url);
         options.method = 'GET';
         options.host = parsedUrl.hostname;
         options.port = parsedUrl.port;
@@ -32,7 +33,7 @@ let Api = (function() {
                     console.log(`Got a response!\n\n`);
 
                     console.log(str);
-                    resolve(str);
+                    resolve(JSON.parse(str));
                 });
             });
 
@@ -40,10 +41,9 @@ let Api = (function() {
         });
     }
 
+    function post(url, body) {
 
-    this.post = function(url, body) {
-        let parsedUrl = new URL(url);
-        console.log(parsedUrl);
+        let parsedUrl = URL.parse(url);
         options.method = 'POST';
         options.host = parsedUrl.hostname;
         options.port = parsedUrl.port;
@@ -60,13 +60,18 @@ let Api = (function() {
                     console.log(`Got a response!\n\n`);
 
                     console.log(str);
-                    resolve(str);
+                    resolve(JSON.parse(str));
                 });
             });
             req.write(body);
             req.end();
         });
     }
-})();
 
-export { Api }
+    return {
+        get,
+        post
+    }
+
+})();
+export { Api };

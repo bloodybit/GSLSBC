@@ -17,7 +17,8 @@ class TransactionForm extends Component {
         this.defaultButtonText = "Send to GSLS";
         this.state = {
             buttonText: this.defaultButtonText,
-            showElement: false
+            showElement: false, 
+            functionName: 'addSocialRecord'
         }
 
         this.createSocialRecord = this.createSocialRecord.bind(this);
@@ -39,9 +40,9 @@ class TransactionForm extends Component {
 
     }
     
-    toggleFormElement(e, show) {
+    toggleFormElement(e, show, functionName) {
         e.preventDefault();
-        this.setState({showElement: show});
+        this.setState({functionName, showElement: show});
         return false;
     }
 
@@ -67,7 +68,7 @@ class TransactionForm extends Component {
         const socialRecord = this.state.socialRecord; // get the SR from the state
         const self = this;
 
-        createRawTrans([socialRecord.globalID, JSON.stringify(socialRecord)])
+        createRawTrans(this.state.functionName, [socialRecord.globalID, JSON.stringify(socialRecord)])
             .then(rawTransaction => {
                 console.log(socialRecord);
                 self.setState({buttonText: "Sending..."}); 
@@ -79,9 +80,11 @@ class TransactionForm extends Component {
                 
             })
             .catch(error => {
+                console.error("ERROR: ", error);
                 self.setState({errorMessage: error});
             })
             .catch(error => {
+                console.error("ERROR: ", error);
                 self.setState({errorMessage: error});
             });
         
@@ -129,13 +132,13 @@ class TransactionForm extends Component {
                 <div className="error">{this.state.errorMessage}</div>
                 <div className="result">{this.state.transactionHash}</div>
                 <h3>New Transaction</h3>
-                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testECRecover(e, false)}>EC REC</button>
-                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testContractCreation(e, false)}>CONTR</button>
+                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testECRecover(e)}>EC REC</button>
+                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testContractCreation(e)}>CONTR</button>
 
                 <hr />
                 <div className="btn-group">
-                    <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.toggleFormElement(e, false)}>Create</button>
-                    <button className="btn btn-warning btn-sm pull-right" onClick={(e) => this.toggleFormElement(e, true)}>Update</button>
+                    <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.toggleFormElement(e, false, 'addSocialRecord')}>Create</button>
+                    <button className="btn btn-warning btn-sm pull-right" onClick={(e) => this.toggleFormElement(e, true, 'updateSocialRecord')}>Update</button>
                 </div>
                 <div id="error-box"></div>
                 <DragHere whatToDrag={"Drag Social Record here"} fileDragged={this.setSocialRecord}/>
@@ -150,7 +153,7 @@ class TransactionForm extends Component {
                 </div> 
                     {/* <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.createSocialRecord}>{this.state.buttonText}</button> */}
                      <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button> 
-                    <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? '' : 'hidden'} onClick={this.updateSocialRecord}>{this.state.buttonText}</button>
+                    <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? '' : 'hidden'} onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button>
             </form>
         );
     }

@@ -16,8 +16,6 @@ const config = require('../resources/config');
 const GSLS_ADDRESS = config.contractAddress; // SOCIAL RECORD CONTRACT GETH
 
 const web3 = new Web3();
-
-// TODO: Remove this
 web3.setProvider(new web3.providers.HttpProvider());
 
 // set up event watchers 
@@ -45,6 +43,7 @@ SocialRecordAdded.get((error, result) => {
 //     }
 // });
 
+// subscribe to events used for testings... 
 function subscribeToEvent(eventName, cb) {
     console.log(eventName);
     if (eventName.constructor === Array) {
@@ -73,32 +72,46 @@ function subscribeToEvent(eventName, cb) {
     }
 }
 
+// get the GSLS contract address (the one that holds all the Social Records)
 function getGSLS() {
     return web3.eth.contract(socialRecordContract.abi).at(config.contractAddress);
 }
 
+// unlock the user account
 function unlockAccount() {
     web3.personal.unlockAccount(window.currentWallet.address, window.currentWallet.password);
 }
 
-function createRawTrans(socialRecordData) {
+// creates the raw transaction starting from the function name and the parameters
+function createRawTrans(functionName, socialRecordData) {
     return new Promise((resolve, reject) => {
-        console.log(`create Raw Transaction`);
+        console.info("INFO: ", createRawTrans.name);
 
-        // TODO Get this variables from apis or server
-        if (!window.currentWallet.address) {
-            reject('ERROR: No address set');
+        if (!window.currentWallet) {
+            reject('ERROR: No wallet set');
         }
+        // TODO: Take it from the GSLS
         let nonce = web3.toHex(web3.eth.getTransactionCount(window.currentWallet.address));
         let gasPrice = web3.toHex(web3.eth.gasPrice);
         let gasLimit = web3.toHex(4700000);
+
+        // get the account nonce from the GSLS
+        // Api
+        //     .get(`http://localhost:8080/accounts/${window.currentWallet.address}/nonce`)
+        //     .then(gslsNonce => {
+        //         console.info(`Nonce ${gslsNonce} retrived from GSLS`);
+        //         nonce = gslsNonce;
+        //     })
+        //     .catch(error => {
+        //         console.error(`ERROR: `, error);
+        //         reject(`ERROR: The GSLS wasn't ablet to return the nonce`)
+        //     });
 
         if (!(nonce && gasPrice && gasLimit)) {
             reject('ERROR: Parameters are missed or not generated');
         }
 
-        console.log(1);
-        const data = convertDataToHex('updateSocialRecord', socialRecordData);
+        const transactionPayload = convertDataToHex(functionName, socialRecordData);
 
         const txParams = {
             nonce,
@@ -106,65 +119,37 @@ function createRawTrans(socialRecordData) {
             gasLimit,
             to: GSLS_ADDRESS,
             value: '0x00',
-            data,
+            data: transactionPayload,
             // EIP 155 chainId - mainnet: 1, ropsten: 3
             chainId: 3
         }
 
-        console.log(`txParams:`, txParams);
+        console.info(`INFO:`, txParams);
 
         let tx = new Transaction(txParams);
-
-        let privateKey = null;
-        if (window.currentWallet) {
-            privateKey = Buffer.from(window.currentWallet.privateKey.substr(2), 'hex');
-        }
-
+        let privateKey = Buffer.from(window.currentWallet.privateKey.substr(2), 'hex');
         tx.sign(privateKey);
+
         let serializedTx = `0x${tx.serialize().toString('hex')}`;
-        console.log(`serializedTx: ${txParams}`);
+        console.info(`INFO: ${serializedTx}`);
 
         resolve(serializedTx);
     });
 }
 
+// converts the method definition into an hex interface (for raw transactions)
 function convertDataToHex(functionName, values) {
     console.log(`prepareData...`);
+    // get the function definition 
     let method = new SolidityFunction('', _.find(socialRecordContract.abi, { name: functionName }), '');
+    // create the transaction payload 
     let payloadData = method.toPayload(values).data;
     return payloadData;
 }
 
+// send the raw transaction to the GSLS
 function sendTransaction(transactionHash) {
-    console.log(`Sending the transaction...`);
-
-    var options = {
-        host: 'localhost',
-        path: '/rawtransaction/',
-        //since we are listening on a custom port, we need to specify it by hand
-        port: '8080',
-        //This is what changes the request to a POST request
-        method: 'POST'
-    };
-
-    return new Promise((resolve, reject) => {
-        let req = http.request(options, (response) => {
-            var str = ''
-            response.on('data', function(chunk) {
-                str += chunk;
-            });
-
-            response.on('end', function() {
-                console.log(`Got a response!\n\n`);
-
-                console.log(str);
-                resolve(str);
-            });
-        });
-
-        req.write(transactionHash);
-        req.end();
-    });
+    return Api.post('http://localhost:8080/rawtransaction/', transactionHash);
 }
 
 function test(e, cb) {
@@ -257,34 +242,48 @@ function test2(e, cd) {
     // });
 }
 
+// add the social calling the blockchain client directly (test purposes)
 function addSocialRecord(globalID, socialRecordBody) {
+    console.info("INFO: ", addSocialRecord.name);
+
+    // unlock the account 
     unlockAccount();
-    // return new Promise(function(resolve, reject) {
-    //     getGSLS().addSocialRecord(globalID, socialRecordBody, { from: window.currentWallet.address, gas: 4700000 },
-    //         function(error, txAddr) {
-    //             if (error) {
-    //                 console.log(error);
-    //                 reject(error);
-    //             } else {
-    //                 console.log(txAddr);
-    //                 resolve(txAddr);
-    //             }
-    //         })
-    // });
+
+    return new Promise(function(resolve, reject) {
+
+        // get the contract and call add on it
+        getGSLS().addSocialRecord(globalID, socialRecordBody, { from: window.currentWallet.address, gas: 4700000 },
+            function(error, txAddr) {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                } else {
+                    console.log(txAddr);
+                    resolve(txAddr);
+                }
+            })
+    });
 }
 
+// update the social calling the blockchain client directly (test purposes)
 function updateSocialRecord(globalID, socialRecordBody) {
     console.info("INFO: ", updateSocialRecord.name);
+
+    // unlock the account
     unlockAccount();
     return new Promise(function(resolve, reject) {
+
+        // set up the event
         const SocialRecordUpdated = getGSLS().SocialRecordUpdated({ fromBlock: 0, toBlock: 'latest' });
 
+        // get the contract and call update on it
         getGSLS().updateSocialRecord(globalID, socialRecordBody, { from: window.currentWallet.address, gas: 4700000 },
             function(error, txAddr) {
                 if (error)
                     reject(error);
             });
 
+        // watch for events 
         SocialRecordUpdated.watch((error, event) => {
             if (error) {
                 console.error("ERROR: ", error);
@@ -298,6 +297,7 @@ function updateSocialRecord(globalID, socialRecordBody) {
     });
 }
 
+// get the social record from the GSLS
 function getSocialRecord(globalID) {
     // return new Promise(function(resolve, reject) {
     //     getGSLS().getSocialRecord(globalID, { from: window.currentWallet.address }, function(error, socialRecord) {
@@ -311,34 +311,8 @@ function getSocialRecord(globalID) {
     //     })
     // });
 
-
-    // let options = {
-    //     host: 'localhost',
-    //     path: '/socialrecord/' + globalID,
-    //     //since we are listening on a custom port, we need to specify it by hand
-    //     port: '8080',
-    //     //This is what changes the request to a POST request
-    //     method: 'GET'
-    // };
-
-    // return new Promise((resolve, reject) => {
-    //     let req = http.request(options, (response) => {
-    //         var str = ''
-    //         response.on('data', function(chunk) {
-    //             str += chunk;
-    //         });
-
-    //         response.on('end', function() {
-    //             console.log(`Got a response!\n\n`);
-
-    //             console.log(str);
-    //             resolve(JSON.parse(str));
-    //         });
-    //     });
-    //     req.end();
-    // });
-
-    return Api.get(`localhost:8080/socialrecord/${globalID}`);
+    // call the api
+    return Api.get(`http://localhost:8080/socialrecord/${globalID}`);
 }
 
 export {
@@ -351,37 +325,3 @@ export {
     test2,
     updateSocialRecord
 };
-
-
-/*
-
-console.log(`Sending the transaction...`);
-
-    var options = {
-        host: 'localhost',
-        path: '/socialrecord/' + globalID,
-        //since we are listening on a custom port, we need to specify it by hand
-        port: '8080',
-        //This is what changes the request to a POST request
-        method: 'GET'
-    };
-
-    return new Promise((resolve, reject) => {
-        let req = http.request(options, (response) => {
-            var str = ''
-            response.on('data', function(chunk) {
-                str += chunk;
-            });
-
-            response.on('end', function() {
-                console.log(`Got a response!\n\n`);
-
-                console.log(str);
-                resolve(str);
-            });
-        });
-
-        req.end();
-    });
-
-*/
