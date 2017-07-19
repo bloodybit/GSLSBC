@@ -10,9 +10,12 @@ import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.ExecutionException;
 
 import static org.web3j.tx.Contract.GAS_LIMIT;
@@ -41,9 +44,9 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public String sendRawTransaction(String hexValue) throws ExecutionException, InterruptedException {
 
-       EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).sendAsync().get();
+        EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).sendAsync().get();
 
-       String transactionHash = ethSendTransaction.getTransactionHash();
+        String transactionHash = ethSendTransaction.getTransactionHash();
         System.out.println(transactionHash);
         return transactionHash;
     }
@@ -51,8 +54,24 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public String getSocialRecord(String globalID) throws IOException, CipherException, ExecutionException, InterruptedException {
 
-        SocialRecord contract = loadContract();
-        return contract.getSocialRecord(new Utf8String(globalID)).get().toString();
+        return loadContract().getSocialRecord(new Utf8String(globalID)).get().toString();
+    }
+
+    @Override
+    public BigInteger getNonce(String address) {
+
+        EthGetTransactionCount ethGetTransactionCount = null;
+        try {
+            ethGetTransactionCount = web3j.ethGetTransactionCount(
+                    address, DefaultBlockParameterName.LATEST).sendAsync().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+
+        return nonce;
     }
 
 
