@@ -4,37 +4,37 @@
 
 \section{User side}
 
-The client can download the software locally ( directly from the GSLS) from GitHub or wherever is hosted).
-In this case is on Electron application running Nodejs on the backend side and React on the front side, where is possible to login uploading the wallet file and the password (is it still needed?).
+The client can download the software locally ( directly from the GSLS) from GitHub or wherever it is hosted).
+In this case, it is on Electron application running Nodejs on the backend side and React on the front side, where it is possible for a user to login, upload the Ethereum wallet file and the password.
 This information is needed to create the row transaction before sending it to the GSLS server.
 
 
 \subsection{POST /socialrecord \& PUT /socialrecord}
-The User can create a new social record or change an existing one (of course only if he is allowed to).
-When the user click on the “submit” Button the following operations are performed:
+The User can create a new social record or modify an existing one (of course, only if he is allowed to).
+When the user clicks on the “submit” Button the following operations are performed:
 
-\begin{itemize}
+\begin{itemize},
   \item \textbf{To Address}: convert the address of the receiver (in this case the contract) to Hex
-  \item \textbf{Get the Gas price}: the gas price is changing constantly in order to set it, it is required to run a get HTTP request to the GSLS server.
+  \item \textbf{Get the Gas price}: the gas price is changing constantly, and in order to set the right amount, it is required to run a get HTTP request to the GSLS server.
   \item \textbf{Gas Limit}: the maximum amount of Gas that the user wants to spend for the transaction to flex.
-  \item \textbf{Nonce}: Is a scalar vector equal to the number of the transactions sent from a particular address. It is a value that needs to be always different in order to satisfy the proof of work condition.
+  \item \textbf{Nonce}: This is a scalar vector equal to the number of the transactions sent from a particular address. It is a value that needs to be always different in order to satisfy the proof of work condition.
   The GSLS Server can retrieve this value, via web3.eth.getTransactionCount(\textit{walletAddress}) and send the result to the user application. Then the nonce is converted to Hex.
-  \item \textbf{Data}: The data field is where the meat is. The first 32 bit are reserved for the first 32 bit of the hashed function name (that the user wants to call).
-  Then, since in the ABI File is specified the number of parameters required from the function (and their type): is possible to grok the bytes needed to append to the data string.
-  In the case of the creation of a new social record, 2 string parameters are required, so they will be both converted to hex and appendend to the field data space into the string (padding with 0 according to the number of bytes allocated to the string type).
+  \item \textbf{Data}: The data field is where the meat is. The first 32 bits are reserved for the first 32 bits of the hashed function name (that the user wants to call).
+  Then, since in the ABI File, the number of parameters required (and their type) is specified  according to each function : it is possible to grok the bytes needed to append to the data string.
+  In the case of creation of a new social record, 2 string parameters are required, which will be converted to hex and appended to the field data space into the string (padding with 0 according to the number of bytes allocated to the string type).
 \end{itemize}
 
-Since the client is the only part of the system allowed to see the wallet file, it must create the mentioned transaction in hexadecimal \textit{style} and sign it with its private key.
+Since the client is the only part of the system allowed to access the wallet file, it must create the mentioned transaction in hexadecimal \textit{style} and sign it with its private key.
 The signed transaction can then be sent to the Server via HTTP.
 
 \subsection{GET /socialrecord/:GlobalID}
-The get request in order to retrieve the social record of one particular GlobalID is a simple promise that contact the server specifying the global id and wait for the result.
+The get request, used to retrieve the social record for a particular GlobalID, is a simple promise that contacts the server specifying the global id and waiting for the result.
 
 \section{Server}
-The GSLS Server can be converted to a REST Server delegated at pulling / pushing social records from /to the blockchain.
+The GSLS Server can be converted to a REST-ful Server delegated at pulling / pushing social records from / to the blockchain.
 The following interfaces are needed:
 \subsection{POST /socialrecord \& PUT /socialrecord}
-  The creation of a new social record happens accordingly to the following steps
+  For a creation of a new social record the following steps are requred:
   \begin{itemize}
     \item GET NONCE \begin{notation}
       TODO
@@ -43,12 +43,12 @@ The following interfaces are needed:
     \item It is possible to create a notification system based on polling, with the client asking for the good or bad result of the operation. It is not possible to send the result in the same HTTP response since it could take more than 90 seconds and therefore time out the request.
   \end{itemize}
 \subsection{GET /socialrecord/:GlobalID}
-The Server receives an HTTP request with one Global ID as parameter. It gets the social record from the blockchain with the help of the ethereum contract and then it sends it back to the cleint as an HTTP response.
-In this case it is not required to set up the polling mechanism because the get transaction operates on constant values and therefore does not need to be mined (the mining operation usually takes more time, in Ethereum from 30 seconds to potentially infinite).
+The Server receives an HTTP request with one Global ID as parameter. It gets the social record from the blockchain with the help of the ethereum contract function and then it sends it back to the client as an HTTP response.
+In this case, it is not required to set up the polling mechanism because the get transaction operates on constant values and therefore does not need to be mined (the mining operation usually takes more time, in Ethereum from 30 seconds to potentially infinite).
 
 \section{Contract}
-The contract can be intended as a class (with constructors and functions) stored in the blockchain.
-The mechanism (simplified) is that having the contract stored (with a unique address) and one wallet sending one transaction to the contract address with inside one method to call: is possible to obtain the same output in all the nodes that will receiuve the transaction.
+The contract can be perceived as a class (with constructors and functions) stored in the blockchain.
+The mechanism (simplified) is that having the contract stored (with a unique address) in the Ethereum BC and one wallet sending one transaction to the contract address containing the method to call: it is possible to obtain the same output in all the nodes that will receive the transaction.
 
 \subsection{Structures}
 In the created social record contract there are 2 structures:
@@ -60,7 +60,7 @@ In the created social record contract there are 2 structures:
           bool exists;
       }
 \end{lstlisting}
-The social record structure allows to store one string and to set one boolean value to mark if the afore mentioned social record is valid.
+The social record structure allows storing one string and setting one boolean value to mark if the above mentioned social record is valid.
 
 \subsubsection{User}
 \begin{lstlisting}
@@ -69,7 +69,7 @@ The social record structure allows to store one string and to set one boolean va
           bool exists;
       }
 \end{lstlisting}
-In the same way it allows to store one globalId and to mark if one specific globalId has been market as existing.
+In the same way, it allows storing one globalId and a boolean variable to mark if the specific globalId is existing
 
 \subsection{Variables}
 \subsubsection{owner}
@@ -83,7 +83,8 @@ The creator of the contract is stored in the owner variable with type address.
 \begin{lstlisting}
   mapping (address => User) users;
 \end{lstlisting}
-The mapping \textit{users} maps each address with one \textit{User} structure.
+The mapping \textit{users} maps each address with one \textit{User} structure. 
+This is used to prove ownership of the SR when someone tries to modify it later.
 \subsubsection{srs}
 \begin{lstlisting}
     mapping (string => SR) srs;
@@ -91,7 +92,7 @@ The mapping \textit{users} maps each address with one \textit{User} structure.
 The mapping \textit{srs} maps each globalId (string) with one \textit{SR} structure.
 
 \subsection{Modifiers}
-The modifiers define who is authorised to call one specific function.
+The modifiers define who is authorised to call a specific function.
 \subsubsection{onlyOwner}
 \begin{lstlisting}
   modifier onlyOwner {
@@ -101,6 +102,26 @@ The modifiers define who is authorised to call one specific function.
 \end{lstlisting}
 The caller of the function must be the owner of the contract.
 
+\subsubsection{onlyUser}
+\begin{lstlisting}
+   modifier onlyUser {
+        if(users[msg.sender].exists) {
+            _;
+        }
+    }
+\end{lstlisting}
+The caller of the function must be verified user.
+
+\subsubsection{onlyNotUser}
+\begin{lstlisting}
+ modifier onlyNotUser {
+       if(!users[msg.sender].exists) {
+            _;
+        }
+    }
+\end{lstlisting}
+The caller of the function must be new user, who is not already saved in the contract.
+
 \subsection{Constructors}
 \begin{lstlisting}
   function SocialRecord(){
@@ -109,8 +130,8 @@ The caller of the function must be the owner of the contract.
         users[msg.sender] = User("Creator", true);
     }
 \end{lstlisting}
-The constructor is identified by the capital letter and the same name as the contract.
-The users map is added with a new address and construct the contract.
+The constructor is identified by the capital letter, and it is the same name as the contract.
+The users map is added with a new address from the contract creator.
 The address of the creator is stored in the contract: he is the only one allowed to kill the contract and terminate all the login, sign up and get functionalities.
 
 \subsection{Functions}
@@ -130,7 +151,7 @@ Otherwise, the globalId is added to the \textit{srs} map with the social record 
    }
 \end{lstlisting}
 This functionality is characterised by the word \textit{constant}, which means that the instructions contained into the function will not change the state of the blockchain: therefore this function can be performed for free.
-The funtion, in particular, receives one globald as a parameter, if the globalId is not taken it throw an exception, otherwise it returns the social record requested.
+The function, in particular, receives one globalId as a parameter. If the globalId is not passed as a parameter, it throws an exception, otherwise it returns the requested social record.
 
 \subsubsection{updateSocialRecord}
 \begin{lstlisting}
@@ -153,10 +174,10 @@ The funtion, in particular, receives one globald as a parameter, if the globalId
     }
 \end{lstlisting}
 
-Two checkers are implemented, one checking if the user is allowed to update the globalId (basically the sender can only update his social record).
-The second check the existence of the social record in a similar manner descibed in the \textit{getSocialRecord} function.
+Two checkers are implemented, one checking if the user is allowed to update the globalId (basically the sender must be the owner and only him can update his social record).
+The second check is about the existence of the social record in a similar manner described  in the \textit{getSocialRecord} function.
 
-Then the \textit{srs} map is changed at index equals to globalId with a new and updated structure.
+Then the \textit{srs} map is changed at index which equals to globalId with a new and updated structure.
 
 \subsubsection{deleteSocialRecord}
 \begin{lstlisting}
@@ -176,10 +197,12 @@ The users that call this function can only delete their own social record.
 \end{lstlisting}
 In this function one modifier is specified, in particular the \textit{onlyOwner} modifier; in fact, only the creator of the contract can terminate the contract itself. 
 
+\subsection{Events}
+There are 3 events that are implemented
+\begin{lstlisting}
+ event SocialRecordAdded(address user, string globalId);
+ event SocialRecordUpdated(address updater, string globalId);
+ event SocialReocordDeleted(address deleter, string globalId);
+\end{lstlisting}
+As each of the names of the events suggests, the events are invoked in case of Social Record creation, update or deletion.
 
-
-
-
-\begin{notation}
-    EVENTS ARE MISSING
-\end{notation}
