@@ -100,7 +100,7 @@ public class RestService {
         JSONObject response = new JSONObject();
 
         response.put("status", 200);
-        response.put("message", transactionHash);
+        response.put("message", "{\"txhash\":\"" +transactionHash+"\"}");
 
         return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }

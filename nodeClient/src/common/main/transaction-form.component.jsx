@@ -42,7 +42,7 @@ class TransactionForm extends Component {
     
     toggleFormElement(e, show, functionName) {
         e.preventDefault();
-        this.setState({functionName, showElement: show});
+        this.setState({functionName});
         return false;
     }
 
@@ -74,9 +74,9 @@ class TransactionForm extends Component {
                 self.setState({buttonText: "Sending..."}); 
                 return sendTransaction(rawTransaction);
             })
-            .then(transactionHash => {
-                console.log(transactionHash);
-                self.setState({transactionHash: "Message sent successfully", buttonText: self.defaultButtonText});
+            .then(response => {
+                console.log(response.txhash);
+                self.setState({successMessage: "Transaction sent successfully", transactionHash: response.txhash, buttonText: self.defaultButtonText});
                 
             })
             .catch(error => {
@@ -123,14 +123,17 @@ class TransactionForm extends Component {
     }
 
     setSocialRecord(socialRecord) {
-        this.setState({socialRecord});
+        this.setState({socialRecord, showElement: true});
     }
 
     render(){
         return (
             <form className="add-poi-form">
                 <div className="error">{this.state.errorMessage}</div>
-                <div className="result">{this.state.transactionHash}</div>
+                <div className="result">
+                    <p>{this.state.successMessage}</p>
+                    <samp className="small">{this.state.transactionHash}</samp>
+                </div>
                 <h3>New Transaction</h3>
                 {/* <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testECRecover(e)}>EC REC</button>
                 <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testContractCreation(e)}>CONTR</button> */}
@@ -142,15 +145,22 @@ class TransactionForm extends Component {
                 </div>
                 <div id="error-box"></div>
                 <DragHere whatToDrag={"Drag Social Record here"} fileDragged={this.setSocialRecord}/>
-                <p className="lead">Transaction info:</p>
-                <div className="form-group">
+                <p className="lead"> Your Social Record:</p>
+                {/* <div className="form-group">
                 <label htmlFor="project-description">Nonce:</label>
                 <input type="number" className="form-control" id="transaction-nonce" placeholder="Nonce..." />
                 </div>
                 <div className="form-group" className={this.state.showElement ? '' : 'hidden'}>
                     <label htmlFor="project-description">GlobalID:</label>
                     <input type="text" className="form-control" id="sr-gloabal-id" placeholder="Global ID..." onChange={ this.handleChange }/>
-                </div> 
+                </div>  */}
+                <div className="form-group" className={this.state.showElement ? '' : 'hidden'}>
+                    <p>Name: <code>{this.state.socialRecord? this.state.socialRecord.displayName: ''}</code></p>
+                    <p>Type: <code>{this.state.socialRecord? this.state.socialRecord.type: ''}</code></p>
+                    <p>GID: <samp>{this.state.socialRecord? this.state.socialRecord.globalID: ''}</samp></p>
+                    <p>Location: <a>{this.state.socialRecord? this.state.socialRecord.profileLocation: ''}</a></p>
+                    <p>Date: {this.state.socialRecord? this.state.socialRecord.datetime: ''}</p>
+                </div>
                     {/* <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.createSocialRecord}>{this.state.buttonText}</button> */}
                      <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button> 
                     <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? '' : 'hidden'} onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button>
