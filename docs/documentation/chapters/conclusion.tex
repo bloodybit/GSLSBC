@@ -1,2 +1,24 @@
 \chapter{Conclusion}
 \label{conclusion}
+
+In conclusion, we have managed to implement the project according to all the requirements and constraints defined. The project has been implemented with three separate entities:
+Unfortunately after few considerations, this approach does not seem to be optimal:
+\begin{itemize}
+	\item The Desktop client is implemented using Electron framework
+	\item The GSLS Server using Java Spring-Boot for APIs implementation and Web3j for communication with the Ethereum client
+	\item Ethereum Testnet node, for accessing the Ethereum Blockchain
+\end{itemize}
+
+We can say that we have encountered more problems that we have initially anticipated and we had to do a lot of research and trials in order to overcome the problems. Some of the biggest challenges we have faced was lack of information on the Internet since it is a new technology and lack of features of Ethereum that we thought will be supported by just knowing Blockchain in theory.
+
+The biggest challenge was to find the appropriate features and architectural design in order to satisfy all the project requirements about the features and the security of the system.Great part of our work included research of the many new blockchain technologies and their possible application in our project.
+
+In many of the intermediate architectural solutions we have faced the problem that in order for anyone to write anything to the blockchain, he/she must be in a possession of a wallet and since it is an open source project, we had the constraint that we can’t associate the wallet with the server since you need to store a secret for the wallet somewhere, and in an open source project that is not possible. So we had to have the wallet information associated with every user.
+
+Another constraint that we wanted to overcome was that we did not want each End User (Client) to be obliged to have Ethereum client on it’s machine in order to be able to communicate with the Ethereum Blockchain. We found the solution to this challenge in signing the raw transactions offline and created a user friendly client application that takes care of this.
+
+While working on this project, we have learned that the Blockchain technology is still very new and under heavy development with many new implementations and use cases emerging almost on daily bases. Additionally we faced a lot of limitations compared to the “regular” programming patterns in terms of features that are not supported while programming contracts in Solidity.
+
+Moreover, since the technology is relatively new, the online community and support is not that strong yet and we had to come up with our solutions to most of the challenges we have faced.
+
+To sum it all up, even though the team had a great challenge to overcome the limitations of the Blockchain technology in  our use case, we have found and implemented a working solution according to the requirements. A lot of research had to be done, but in the end we have succeeded to implement the project.
