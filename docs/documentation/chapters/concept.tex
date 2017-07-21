@@ -2,41 +2,38 @@
 \label{chapter:concept}
 \section{Approaches to Store Social Records}
 \subsection{Store the Social Record}
-The most intuitive solution would be to switch from the DHT table to the Blockchain, moving each social record through a transaction.
+The most intuitive solution would be to switch from the DHT to the Blockchain, moving each social record through a transaction. 
 Unfortunately after few considerations, this approach does not seem to be optimal:
 \begin{itemize}
-	\item Store the entire social record would occupy a high amount of memory in the distribuited node.
-	In particular the limit for the data structure is 44kb, but is best practice to keep the records light.
-	\item Check the real identity of the uploader would be impossible, one option could be to allow only a specific wallet address to write into it.
-	\item Look up would not be efficient.
+	\item Storing the entire social record would occupy a high amount of memory in the distributed node. 
+In particular the limit for the data structure is 44kb, but is best practice to keep the records light.
+	\item Checking the real identity of the uploader would be impossible, one option could be to allow only a specific wallet address to write into it.
+	\item Looking up would not be efficient.
 \end{itemize}
 
 
-\subsection{Store the Hash}
+\subsection{Storing the Hash}
 This solution is inspired by Blockstack architecture and requires to create a DHT to map the GlobalID to the address of the transaction contained inside the blockchain.
 
-The transaction holds in the data field the hash of the Social Record. In this manner, the blockchain has the role of validation infrastructure rather than storage system. The actual data is stored in the distributed hash table. This solution could be vulnerable in case a malicious node tries to restore an old version of the social record by injecting the wrong address in the DHT table, causing a currupted record.
+The hash of the Social Record is stored in the data field of the transaction in the Blockchain. In this manner, the blockchain has the role of validation infrastructure rather than storage system. The actual data is stored in the distributed hash table. This solution could be vulnerable in case a malicious node tries to restore an old version of the social record by injecting the wrong address in the DHT table, causing a corrupted record.
 
-\subsection{Use a third-party solution}
-Blockstack offers an already implemented solution using a layered architecture similar to the one proposed in solution 2. It allows also to choose among different blockchain implementations and storage systems. Nevertheless, the underlying idea is the same as solution 2: use the blockchain as a validation system and use a DHT to map ids (keys/GlobalIDs) with the corresponding values (Social Records).
+\subsection{Using a third-party solution}
+Blockstack offers an already implemented solution using a layered architecture similar to the one proposed in solution 2. It also allows to choose among different blockchain implementations and storage systems. Nevertheless, the underlying idea is the same as solution 2: use the blockchain as a validation system and use a DHT to map ids (keys/GlobalIDs) with the corresponding values (Social Records).
 
-According to Blockstack, the applications built on this system are server-less and decentralized.
-Developers start by building a single-page application in Javascript.
-Then, instead of plugging the frontend into a centralized API, they plug into an API run by the user.
-Developers install a library called 'blockstack.js' and do not have to worry about running servers, maintaining databases, or building out user management systems [add reference].
+According to Blockstack, the applications built on this system are serverless and decentralized. Developers start by building a single-page application in Javascript. Then, instead of plugging the frontend into a centralized API, they plug into an API run by the user. Developers install a library called ’blockstack. js’ and do not have to worry about running servers, maintaining databases, or building out user management systems [add reference].
 
 
 \section{How to Store the Social Records}
 It is important to understand how to write transactions in the blockchain, in particular in an ethereum contract.
 
-Given the fact that the GSLS is an open source not centrally managed server, a safety threat may arise.
-In order to ask to the server to conclude a particular transaction, a password is required (otherwise a malicious user could update the social record on behalf of someone else), but of course in case of a malicious node the password could be sniffed.
-In order to solve this problem asymmetric keys solutions can be implemented (such as the mentioned above RSA and ECC).
+Given the fact that the GSLS is an open source, and not centrally managed server, a safety threat may arise.
+In order to ask the server to record a particular transaction, a password is required (otherwise a malicious user could update the social record on behalf of someone else), but of course in case of a malicious node the password could be sniffed.
+In order to solve this problem asymmetric keys solutions can be implemented (such as the above mentioned RSA and ECC).
 
 
 The contract will therefore be a \textit{key-value} array whith the globalId as key and the as value a json object with the folliwing structure:
 
-\paragraph{In case of we store the hashed Social Record}\
+\paragraph{In case we store the hashed Social Record}\
 \begin{lstlisting}
 	{
 		publicKey: String,
@@ -44,8 +41,8 @@ The contract will therefore be a \textit{key-value} array whith the globalId as 
 	}
 \end{lstlisting}
 
-With this data structure in order to verify the authenticity of the social record will be enough to hash the DHT social record and check it with the variable stored in the blockchain for that particular user.
-In order to update the information is required to encript the following object with the user's private key:
+With this data structure in order to verify the authenticity of the social record will be enough to hash the social record stored in the DHT and compare it with the variable(the hash) stored in the blockchain for that particular user.
+In order to update the information, the following object needs to be encrypted with the user’s private key:
 
 \begin{lstlisting}
 	{
@@ -54,10 +51,10 @@ In order to update the information is required to encript the following object w
 	}
 \end{lstlisting}
 
-So the contract is able to open the message, check if the globalId match with the one of the user and update the record.
+In order to update the record, the signature is checked with the help of the user’s public key, and then, if valid, the record is updated in a new transaction in the Blockchain.
 
 
-\paragraph{In case of we store the entire Social Record}\
+\paragraph{In case we store the entire Social Record in the Blockchain by the GSLS server}\
 \begin{lstlisting}
 	{
 		publicKey: string,
@@ -65,11 +62,11 @@ So the contract is able to open the message, check if the globalId match with th
 	}
 \end{lstlisting}
 
-The record to store is similar, the only difference is that rather than the hashedSocialRecord string, the contract is storying the socialRecord Object (which imply higher costs).
+The record to store is similar, the only difference is that rather than the hashedSocialRecord string, the contract is storing the socialRecord Object (which implies higher costs).
 Unfortunately the process to insert the social record for the first time is more complex.
-The main reason of this complexity is due to the fact that the GSLS sistem will not look up for the DHT table anymore (and therefore it will be possible to remove it) and the authenticity of the record must be assured by the solidity contract.
+The main reason of this complexity is due to the fact that the GSLS system will not look up for the DHT table anymore (and therefore it will be possible to remove it) and the authenticity of the record must be assured by the solidity contract.
 
-The first writing especially, will be extremely difficult with an object as follow:
+The first writing especially, will be extremely difficult with an object as shown:
 \begin{lstlisting}
 	{
 		globalId: string,
@@ -78,7 +75,7 @@ The first writing especially, will be extremely difficult with an object as foll
 	}
 \end{lstlisting}
 
-EncriptedData is a string that can be decrypted with the public key and that will be declared authentic if the result of the decrpytion will be a JSON object as follow.
+EncryptedData is a string that can be decrypted with the public key and that will be declared authentic if the result of the decryption will be a JSON object as shown:
 \begin{lstlisting}
 {
 	globalId: string,
@@ -86,16 +83,14 @@ EncriptedData is a string that can be decrypted with the public key and that wil
 }
 \end{lstlisting}
 
-This approach, even though complicated at first, solve a crucial problem and the biggest barrier of the blockchain technology in general: force all the users to run the blockchain.
+This approach, even though complicated at first, solves a crucial problem and the biggest barrier of the blockchain technology in general: force all the users to run the blockchain.
 
-In fact, if the users don't want to host the ethereum node and cannot rely on the authenticity of the server, they are impossibilitated to update their record.
+In fact, if the users don’t want to host an Ethereum node and cannot rely on the authenticity of the server, it is impossible for them to update their record.
 
-It is a common practice to trust the server identity of every service (and when it is not possible to trust the service, it is still possiblo to write in the blockchain), but with this approach the writing/reading problem can be solved even without trusting anyone and without hosting any blockchain.
-
-Unfortunately, so far, an asymmetric library in solidity has not been developed yet.
+The problem with users who don’t want to host an Ethereum node could be overcome if they trust the server, but one of our constraints is to build a trestles application. In theory this can be done if the asymmetric key validation is done in a contract in the Blockchain, but unfortunately, so far, an asymmetric library in solidity has not been developed yet.
 
 
-Event though the implementation of Elliptic Curves or RSA keys would be a useful (although expensive) feature, and the Elliptic curve is already implemented in Ethereum in order to create and verify private and public keys, a solidity implementation is not yet available.
+Even though the implementation of Elliptic Curves or RSA keys would be a useful (although expensive) feature, and the Elliptic curve is already implemented in Ethereum in order to create and verify private and public keys, a solidity implementation is not yet available.
 
 Nevertheless there are several proposals and RFCs both for RSA and Elliptic curves \citep{ECImplementation} \citep{RSAImplementation} and have been taken place suggestions of implementing asymmetric keys and many other features in the EVM2.0.
 Because of this lack the described process cannot be pursued.
@@ -119,7 +114,7 @@ Transaction- Is an operation that aims at changing the status of the BC through 
 
 Contract - Operations that needs to be performed in particulars contracts when not specified in the doc contract and solidity contract are considered synonyms.
 
-\section{Use wallet without hosting an Ethereum Node}
+\section{Using wallet without hosting an Ethereum Node}
 
 The last approach that this paper wants to explain requires the users to create an Ethereum wallet but not to host an Ethereum node and can ensure a complete and working implementation without the DHT.
 
@@ -127,79 +122,79 @@ The \textit{key-value} array this time has the user's wallet address as a key an
 
 The steps to follow are the same as the user participate in the blockchain with an ethereum node: he creates the transaction with all the data but, instead of uploading it in the network, the transaction is sent to the GSLS node and then finally pushed on the network.
 
-This metodology is called offline transaction because the client can create and sign transactions with his ethereum account without running the node and so: being offline. The only limitation of this solution is that the transaction needs be signed with the private key of the account instead that with the usual combination of username - password created with the account.
+This methodology is called offline transaction because the client can create and sign transactions with his ethereum account without running the node and so: being offline. The only limitation of this solution is that the transaction needs be signed with the private key of the account instead that with the usual combination of username - password created with the account.
 
 This could lead to suspicion over this authentication system because the common sense and the documentation suggests not to share the private key, it is important to notice that the private key is not shared to the server and will never leave the local environment.
 
 
 \section{Possible Approaches}
 \subsection{Keep the DHT and verify the authenticity of the Social Record with the blockchain}
-The first approach wants to be cheap and light.It will keep the DHT implementation and aims to integrate the Blockchain in order to detect malicious charges in the SR stared in the DHT itself.
+The first approach is both, cheap and light. It keeps the DHT implementation and aims to integrate the Blockchain in order to detect malicious changes in the SR stored in the DHT itself.
 
-\subsubsection{How it works}
+\subsubsection{How does it work}
 \paragraph{Creation \& Update}
 
-This implementation does not require the client to host an Ethereal node, but needs a wallet per each user.
+This implementation does not require the client to host an Ethereum node, but needs a wallet per each user.
 
 The user needs to download a piece of software to run (eg. exe, epp).
 
-The software creates the Sonic Private Key and Sonic Public Key ( in case of a new user, otherwise will upload his keys), the user must save the private key in a secure location ( otherwise he will loose the possibility to change his SR).
-Then the social record is created /uploaded as always and stored in the DHT.
-The SR is then Hashed, resulting in a string of small dimension.
-The hash is then uploaded in the blockchain through the server in a Key value array with the Old as Key end the hash as a value.
+The software creates the Sonic Private Key and Sonic Public Key ( in case of a new user, otherwise the user will upload his existing keys), and then the user must save the private key in a secure location ( otherwise he will loose the possibility to change his SR).
+Then the social record is created / uploaded as always and stored in the DHT.
+The SR is then hashed, resulting in a small dimension string.
+The hash is then uploaded in the blockchain through the server in a Key value array with the Id as Key end the hash as a value.
 
 \paragraph{GET}
 
-When a user wants to retrieve information starting from a particular GlobalId, he has to pull the SR of that particular Global iD from the DHT and the hashes from Blockchain.
+When a user wants to retrieve information starting from a particular GlobalId, he has to pull the SR of that particular GlobalId from the DHT and the hashes from the Blockchain.
 
-If the hashes SR of the Blockchain is the same as the hashing of the retrieved from the DHT, the record is pure.
+If the hashed SR from the Blockchain is the same as the hashed version of the retrieved SR from the DHT, then the record is valid.
 
-This approach is valid and cheap since only the Hash of the entire SR is stared.
+This approach is valid and cheap since only the Hash of the entire SR is stored.
 Unfortunately, the solution can only detect unauthorised changes but not rollback from it.
 
 \subsection{Without DHT and Etherereum Accounts for the Users}
-This approach tries to merge the security and immutability of the Blockchain without forcing the User to have a wallet or Ethereum account nevertheless is important to keep in mind that the server that contacts the bc must move a node. In our prototype we can imagine the GSLS as a Server hosting in Ethereum Node and implementing some functionalities explained here bellow.
+This approach merges the security and immutability of the Blockchain without forcing the User to have a wallet or Ethereum account. Nevertheless, it is important to keep in mind that the server that contacts the Blockchain must run a BC node. In our prototype we can imagine the GSLS as a Server hosting in Ethereum Node and implementing some functionalities explained here below.
 
-\subsubsection{How it works}
+\subsubsection{How does it work}
 
 \paragraph{Creation}
 
-The user downloads the software, generates the Sonic Public and Private Key. Once the social record has been created, it is encrypted with the private Key and the following object is send to the server.
+The user downloads the software, then generates the Sonic Public and Private Key. Once the social record has been created, it is encrypted with the private Key and the following object is sent to the server.
 
 (Global ID, Pub Key, Encrypted (SR))
 
-The server with the ( Server wallet) uploads the transaction to the blockchain. The contract stored in Ethereum will decrypt the encrypted SR and store the Key Value array with the Global Id as key and the object (Public key, SR version 1 ) as Value.
+The server with the ( Server wallet) uploads the transaction to the blockchain via a function call in a contract. The contract, stored in Ethereum, will decrypt the encrypted SR by using the Public Key of the user,  and then store the SR in the Key Value array with the Global Id as key and the SR object (Public key, SR version 1 ) as Value.
 
 \paragraph{Update}
 
-In order to update SR, the User application needs to retrieve the number of version, encrypt the number of version + 1 and send the following object to the server (that will update it to the blockchain). The Solidity contract will decrypt the version and check if it match the version +1 in the Blockchain , if it match, the SR can be decrypted as well and update the record in the BC.
+In order to update the SR, the User application needs to retrieve the number of the version, encrypt the number of version + 1 and send the following object to the server (that will update the SR in the blockchain). The Solidity contract will decrypt the version and check if it matches the version +1 in the Blockchain , if it matches, the SR can be decrypted as well and the record will be updated in the BC.
 
 \paragraph{GET}
 
-Get is pretty trivied, asking for a Global Id, the SR will returned. This approach even if valid (although expension is not visible because of ….)
+Get is pretty trivial, asking for a GlobalId, and then the SR is returned. 
 
 \subsection{User with Ethereum Wallet}
 
-This approach require the Suers to have an Ethereal wallet but not to run an Ethereal node.
-This is optimal because it allows the users to update their credentials even without hybrid solutions that port of the the bc (such as ….) Ideally, it is possible to create and change the record even from a random hosting. Pc or mobile device.
+This approach requires the users to have an Ethereum wallet but not to run an Ethereum node.
+This is optimal because it allows the users to update their credentials even without trusting 3rd party service. Ideally, it is possible to create and change the record even from a different devices such as PC or smartphone.
 
-It is enough to provide the wallet file .j son file.
+It is enough to provide the wallet .json file.
 
-\subsubsection{How it works}
+\subsubsection{How does it work}
 \paragraph{Creation \& Update}
 
-Once the wallet file json loaded on the application its is possible to create the social record, sign it with the private key; creating the transaction normally. This signed transaction is then uploaded to the server and then to the BC wallet file json.
+Once the wallet json file is loaded into the application it is possible to create the social record, sign it with the private key; thus creating the transaction normally. This signed transaction is then uploaded(passed) to the server and then to the BC wallet file json.
 
-Json file with the private key of the Ethereum wallet account ( and other information).
+What is needed is json file with the private key of the Ethereum wallet account ( and other information).
 
-In a Key Value array as follow Gid-SR
+The SR is stored in a Key Value array as Gid-SR
 
 \paragraph{GET}
 
-(same as previous)
+Get is pretty trivial, asking for a GlobalId, and then the SR is returned.
 \begin{notation}
 
 Needs to be done
 \end{notation}
 
-This approach force the users to deliver an Ethereal wallet but it conceptually more correct because it uses the offline transaction from —— link to yellow white paper.
+This approach forces the users to have an Ethereum wallet, but it is conceptually more correct because it uses the offline transaction form.
