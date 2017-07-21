@@ -13,7 +13,7 @@ This information is needed to create the row transaction before sending it to th
 The User can create a new social record or modify an existing one (of course, only if he is allowed to).
 When the user clicks on the “submit” Button the following operations are performed:
 
-\begin{itemize},
+\begin{list}{},
   \item \textbf{To Address}: convert the address of the receiver (in this case the contract) to Hex
   \item \textbf{Get the Gas price}: the gas price is changing constantly, and in order to set the right amount, it is required to run a get HTTP request to the GSLS server.
   \item \textbf{Gas Limit}: the maximum amount of Gas that the user wants to spend for the transaction to flex.
@@ -22,7 +22,7 @@ When the user clicks on the “submit” Button the following operations are per
   \item \textbf{Data}: The data field is where the meat is. The first 32 bits are reserved for the first 32 bits of the hashed function name (that the user wants to call).
   Then, since in the ABI File, the number of parameters required (and their type) is specified  according to each function : it is possible to grok the bytes needed to append to the data string.
   In the case of creation of a new social record, 2 string parameters are required, which will be converted to hex and appended to the field data space into the string (padding with 0 according to the number of bytes allocated to the string type).
-\end{itemize}
+\end{list}
 
 Since the client is the only part of the system allowed to access the wallet file, it must create the mentioned transaction in hexadecimal \textit{style} and sign it with its private key.
 The signed transaction can then be sent to the Server via HTTP.

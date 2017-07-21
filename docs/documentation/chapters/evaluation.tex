@@ -22,12 +22,10 @@ It is nevertheless reasonable to estimate it in 1-3 minutes.
 If on the performance side this new approach may appear not optimal, the security is strongly enhanced in compare with the previous DHT implementation.
 
 It has been proved in the concept section the security of this approach, in particular:
-\begin{itemize}
-  \item \textbf{Bigger Node}: Since the social record is stored in one of the main public blockchains, it is very unlikely to perpetrate an attack aiming at the 50\%+1 of the netwok (proof of immunity).
-  \item \textbf{Contract}: The contract has a consistent number of checkers in order to stop attack to change one particular social record (functionalities that were not available within the DHT).
-  \item \textbf{Client Server}: Not only the storying method is secure but also the communication between the client and the server since the transactions are sent already encrypted.
-  \item \textbf{Malicious GSLS}: In this approach a malicious GSLS server cannot change the contect of one social record nor upload an old one (due to the expired nonce of the transaction).
-  The only feasable attack is to send false information to the client (e.g. nonce), resulting in an invalid transaction.
-  Nevertheless the open source nature of the sonic project allows to arbitrary choose the GSLS server the user wants to link to.
-  It will be therefore only necessary to change the server location in the desktop application settings.
-\end{itemize}
+
+\begin{list}{}{}
+\item {Bigger Node}: Since the social record is stored in one of the main public blockchains, it is very unlikely to perpetrate an attack aiming at the 50\%+1 of the netwok (proof of immunity).
+\item {Contract}: The contract has a consistent number of checkers in order to stop attack to change one particular social record (functionalities that were not available within the DHT.
+\item {Client Server}: Not only the storying method is secure but also the communication between the client and the server since the transactions are sent already encrypted.
+\item {Malicious GSLS}: in this approach a malicious GSLS server cannot change the contect of one social record nor upload an old one (due to the expired nonce of the transaction). The only feasable attack is to send false information to the client (e.g. nonce), resulting in an invalid transaction. Nevertheless the open source nature of the sonic project allows to arbitrary choose the GSLS server the user wants to link to. It will be therefore only necessary to change the server location in the desktop application settings.
+\end{list}
