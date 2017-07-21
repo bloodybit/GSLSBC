@@ -17,4 +17,8 @@ public interface TransactionService {
 
     BigInteger getNonce(String address);
 
+    BigInteger getGasPrice();
+
+    BigInteger getGasLimit();
+
 }

@@ -111,17 +111,27 @@ public class RestService {
      * @param address
      * @return ResponseEntity
      */
-    @RequestMapping(value = "/account/{address}/nonce", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/account/{address}/txninfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> getNonceByAccountAddress(@PathVariable("address") String address) {
 
-        LOGGER.info("Incoming request: GET /" + "account/" + address + "/nonce");
+        LOGGER.info("Incoming request: GET /" + "account/" + address + "/txninfo");
         BigInteger nonce = transactionService.getNonce(address);
+
+        BigInteger gasPrice = transactionService.getGasPrice();
+
+        BigInteger gasLimit = transactionService.getGasLimit();
 
         JSONObject response = new JSONObject();
 
+        JSONObject txnInfo = new JSONObject();
+
+        txnInfo.put("nonce", nonce);
+        txnInfo.put("price", gasPrice);
+        txnInfo.put("limit", gasLimit);
+
         response.put("status", 200);
-        response.put("message", "{\"nonce\":" +nonce+"}");
+        response.put("message", txnInfo);
 
         return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }
