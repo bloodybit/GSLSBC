@@ -3,5 +3,13 @@
     "testContractAddress": "0x68d2300251f63e1f0d3fb1c6c83cff9cb97f129d",
     "hostname": "localhost",
     "port": "2002",
-    "gsls": "http://localhost:2002"
+    "gsls": "http://localhost:2002",
+    "gasPrice": {
+        "hex": "0x174876e800",
+        "wei": 44000000000 // wei
+    },
+    "gasLimit": {
+        "hex": "0x47b760",
+        "wei": 4700000 // amount of gas
+    }
 }

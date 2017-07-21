@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import DragHere from '../drag-here.component.jsx';
-
 import jsonFile from 'jsonfile';
 import { 
     addSocialRecord, 
     createRawTrans, 
     sendTransaction, 
-    subscribeToEvent,
-    test, 
-    test2, 
     updateSocialRecord } from './../../../logic/transaction';
 
 class TransactionForm extends Component {
+
     constructor() {
         super();
         this.defaultButtonText = "Send to GSLS";
@@ -25,35 +22,14 @@ class TransactionForm extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.sendTransactionToGsls = this.sendTransactionToGsls.bind(this);
         this.setSocialRecord = this.setSocialRecord.bind(this);
-        this.testContractCreation = this.testContractCreation.bind(this);
-        this.testECRecover = this.testECRecover.bind(this);
         this.toggleFormElement = this.toggleFormElement.bind(this);
         this.updateSocialRecord = this.updateSocialRecord.bind(this);
-
-        // subscribeToEvent(['SocialRecordAdded', 'SocialRecordUpdated'], function(error, result) {
-        //     if (error) {
-        //         console.log(error);
-        //     } else {
-        //         console.log(result);
-        //     }
-        // });
-
     }
     
     toggleFormElement(e, show, functionName) {
         e.preventDefault();
         this.setState({functionName});
         return false;
-    }
-
-    testContractCreation(e) {
-        e.preventDefault();
-        test(e, (contractAddress) => console.log(contractAddress));
-    }
-
-    testECRecover(e) {
-        e.preventDefault();
-        test2(e, (userAddress) => console.log(userAddress));
     }
 
     handleChange(e) {
@@ -87,7 +63,6 @@ class TransactionForm extends Component {
                 console.error("ERROR: ", error);
                 self.setState({errorMessage: error});
             });
-        
     }
 
     createSocialRecord(e) {
@@ -135,9 +110,6 @@ class TransactionForm extends Component {
                     <samp className="small">{this.state.transactionHash}</samp>
                 </div>
                 <h3>New Transaction</h3>
-                {/* <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testECRecover(e)}>EC REC</button>
-                <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.testContractCreation(e)}>CONTR</button> */}
-
                 <hr />
                 <div className="btn-group">
                     <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.toggleFormElement(e, false, 'addSocialRecord')}>Create</button>
@@ -146,14 +118,6 @@ class TransactionForm extends Component {
                 <div id="error-box"></div>
                 <DragHere whatToDrag={"Drag Social Record here"} fileDragged={this.setSocialRecord}/>
                 <p className="lead"> Your Social Record:</p>
-                {/* <div className="form-group">
-                <label htmlFor="project-description">Nonce:</label>
-                <input type="number" className="form-control" id="transaction-nonce" placeholder="Nonce..." />
-                </div>
-                <div className="form-group" className={this.state.showElement ? '' : 'hidden'}>
-                    <label htmlFor="project-description">GlobalID:</label>
-                    <input type="text" className="form-control" id="sr-gloabal-id" placeholder="Global ID..." onChange={ this.handleChange }/>
-                </div>  */}
                 <div className="form-group" className={this.state.showElement ? '' : 'hidden'}>
                     <p>Name: <code>{this.state.socialRecord? this.state.socialRecord.displayName: ''}</code></p>
                     <p>Type: <code>{this.state.socialRecord? this.state.socialRecord.type: ''}</code></p>
@@ -161,8 +125,7 @@ class TransactionForm extends Component {
                     <p>Location: <a>{this.state.socialRecord? this.state.socialRecord.profileLocation: ''}</a></p>
                     <p>Date: {this.state.socialRecord? this.state.socialRecord.datetime: ''}</p>
                 </div>
-                    {/* <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.createSocialRecord}>{this.state.buttonText}</button> */}
-                     <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button> 
+                    <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button> 
                     <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? '' : 'hidden'} onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button>
             </form>
         );
