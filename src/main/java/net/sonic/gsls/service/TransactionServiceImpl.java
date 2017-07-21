@@ -11,6 +11,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
@@ -71,6 +72,8 @@ public class TransactionServiceImpl implements TransactionService {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
 
         return null;
@@ -91,6 +94,31 @@ public class TransactionServiceImpl implements TransactionService {
         BigInteger nonce = ethGetTransactionCount.getTransactionCount();
 
         return nonce;
+    }
+
+    @Override
+    public BigInteger getGasPrice() {
+
+        EthGasPrice gasPrice = null;
+
+        try {
+            gasPrice = web3j.ethGasPrice().send();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (gasPrice != null) {
+
+            return gasPrice.getGasPrice();
+        }
+
+        return null;
+    }
+
+    @Override
+    public BigInteger getGasLimit() {
+
+        return GAS_LIMIT;
     }
 
 
