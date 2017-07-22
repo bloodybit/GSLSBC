@@ -1,19 +1,18 @@
 const URL = require('url');
 import * as http from 'http'; // http requests 
 
-console.log(URL);
-
+// call the gsls
 let Api = (function() {
 
+    // default options
     let options = {
         host: 'localhost',
         path: '/socialrecord/',
-        //since we are listening on a custom port, we need to specify it by hand
         port: '8080',
-        //This is what changes the request to a POST request
         method: 'GET'
     };
 
+    // get method
     function get(url) {
 
         let parsedUrl = URL.parse(url);
@@ -31,9 +30,19 @@ let Api = (function() {
 
                 response.on('end', function() {
                     console.log(str);
-                    let message = JSON.parse(str).message;
-                    console.log("message: ", message);
-                    resolve(JSON.parse(message));
+                    let parsedResponse = JSON.parse(str);
+                    console.log(parsedResponse);
+
+                    if (parsedResponse.status != 200) {
+                        reject(parsedResponse.message);
+                    } else {
+                        let message = parsedResponse.message;
+                        // console.log("message: ", message);
+                        if (typeof message == 'string') {
+                            message = JSON.parse(message)
+                        }
+                        resolve(message);
+                    }
                 });
             });
 
@@ -41,6 +50,7 @@ let Api = (function() {
         });
     }
 
+    // put method
     function put(url, body) {
 
         let parsedUrl = URL.parse(url);
@@ -57,11 +67,11 @@ let Api = (function() {
                 });
 
                 response.on('end', function() {
-                    console.log(str);
+                    // console.log(str);
                     let message = JSON.parse(str).message;
-                    console.log("message: ", message);
+                    // console.log("message: ", message);
 
-                    resolve(JSON.parse(message));
+                    resolve(message);
                 });
             });
             req.write(body);

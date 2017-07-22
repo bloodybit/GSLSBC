@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.net.URISyntaxException;
-
+import java.util.concurrent.ExecutionException;
 /**
  * Main class for GSLS REST interface
  *
@@ -57,12 +57,18 @@ public class RestService {
     public ResponseEntity<String> getEntityByGlobalID(@PathVariable("globalID") String globalID) {
 
         LOGGER.info("Incoming request: GET /" + globalID);
-        String socialRecord = transactionService.getSocialRecord(globalID);
-
         JSONObject response = new JSONObject();
 
-        response.put("status", 200);
-        response.put("message", socialRecord);
+        try {
+            String socialRecord = transactionService.getSocialRecord(globalID);
+            response.put("status", 200);
+            response.put("message", socialRecord);
+
+        } catch (ExecutionException e) {
+            System.out.println("Social Record not found");
+            response.put("status", 404);
+            response.put("message", "Social Record not found");
+        }
 
         return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }
@@ -99,8 +105,11 @@ public class RestService {
 
         JSONObject response = new JSONObject();
 
+        JSONObject txHash = new JSONObject();
+        txHash.put("txHash", transactionHash);
+
         response.put("status", 200);
-        response.put("message", "{\"txhash\":\"" +transactionHash+"\"}");
+        response.put("message", txHash);
 
         return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }

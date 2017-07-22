@@ -57,6 +57,22 @@ html {
     margin-top: 1rem;
 }
 
+.no-sr {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    display: block;
+    background-image: url("images/nodata.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    margin: 0 auto;
+    height: 200%;
+}
+
 @keyframes border-pulsate {
     0% {
         font-size: 95%;
@@ -174,6 +190,7 @@ html {
 
 .add-poi-form {
     padding: 20px;
+    margin-bottom: 50px;
 }
 
 .vertical-position-60 {

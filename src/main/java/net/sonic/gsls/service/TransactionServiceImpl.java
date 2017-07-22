@@ -64,13 +64,12 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public String getSocialRecord(String globalID) {
-
+    public String getSocialRecord(String globalID) throws ExecutionException{
+        SocialRecord socialRecordContract = loadContract();
         try {
-            return loadContract().getSocialRecord(new Utf8String(globalID)).get().toString();
+            String result = socialRecordContract.getSocialRecord(new Utf8String(globalID)).get().toString();
+            return result;
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
             e.printStackTrace();

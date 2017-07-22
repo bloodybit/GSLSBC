@@ -6,10 +6,10 @@
     "gsls": "http://localhost:2002",
     "gasPrice": {
         "hex": "0x174876e800",
-        "wei": 44000000000 // wei
+        "wei": 44000000000
     },
     "gasLimit": {
         "hex": "0x47b760",
-        "wei": 4700000 // amount of gas
+        "wei": 4700000
     }
 }

@@ -15,6 +15,8 @@ class TransactionForm extends Component {
         this.state = {
             buttonText: this.defaultButtonText,
             showElement: false, 
+            activateCreate: true,
+            activateUpdate: false,
             functionName: 'addSocialRecord'
         }
 
@@ -28,7 +30,7 @@ class TransactionForm extends Component {
     
     toggleFormElement(e, show, functionName) {
         e.preventDefault();
-        this.setState({functionName});
+        this.setState({functionName, activateUpdate: show, activateCreate: !show});
         return false;
     }
 
@@ -51,8 +53,8 @@ class TransactionForm extends Component {
                 return sendTransaction(rawTransaction);
             })
             .then(response => {
-                console.log(response.txhash);
-                self.setState({successMessage: "Transaction sent successfully", transactionHash: response.txhash, buttonText: self.defaultButtonText});
+                console.log(response.txHash);
+                self.setState({successMessage: "Transaction sent successfully", transactionHash: response.txHash, buttonText: self.defaultButtonText});
                 
             })
             .catch(error => {
@@ -112,8 +114,8 @@ class TransactionForm extends Component {
                 <h3>New Transaction</h3>
                 <hr />
                 <div className="btn-group">
-                    <button className="btn btn-primary btn-sm pull-right" onClick={(e) => this.toggleFormElement(e, false, 'addSocialRecord')}>Create</button>
-                    <button className="btn btn-warning btn-sm pull-right" onClick={(e) => this.toggleFormElement(e, true, 'updateSocialRecord')}>Update</button>
+                    <button className={"btn btn-sm pull-right " + (this.state.activateCreate? 'btn-primary': 'btn-default')} onClick={(e) => this.toggleFormElement(e, false, 'addSocialRecord')}>Create</button>
+                    <button className={"btn btn-sm pull-right " + (this.state.activateUpdate? 'btn-warning': 'btn-default')} onClick={(e) => this.toggleFormElement(e, true, 'updateSocialRecord')}>Update</button>
                 </div>
                 <div id="error-box"></div>
                 <DragHere whatToDrag={"Drag Social Record here"} fileDragged={this.setSocialRecord}/>
@@ -125,8 +127,7 @@ class TransactionForm extends Component {
                     <p>Location: <a>{this.state.socialRecord? this.state.socialRecord.profileLocation: ''}</a></p>
                     <p>Date: {this.state.socialRecord? this.state.socialRecord.datetime: ''}</p>
                 </div>
-                    <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? 'hidden' : ''} onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button> 
-                    <button type="submit" className="btn btn-primary btn-sm pull-right" className={this.state.showElement ? '' : 'hidden'} onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button>
+                    <button type="submit" className="btn btn-primary btn-sm pull-right" onClick={this.sendTransactionToGsls}>{this.state.buttonText}</button> 
             </form>
         );
     }

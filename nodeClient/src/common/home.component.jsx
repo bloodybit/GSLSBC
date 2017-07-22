@@ -11,24 +11,27 @@ class Home extends Component {
         };
         this.gotResults = this.gotResults.bind(this);
         this.displayResults = this.displayResults.bind(this);
-        console.log(window.currentWallet);
     }
 
     gotResults(error, socialRecord) {
         if (error) {
-            this.setState({ errorMessage: error });
+            console.log(error);
+            this.setState({ errorMessage: error, socialRecord: null });
+            this.displayResults();
         } else {
             console.log(socialRecord);
-            this.setState({ socialRecord });
+            this.setState({ socialRecord, errorMessage: null});
             this.displayResults();
         }
     }
 
     displayResults() {
+        console.log("displayRes");
         if (this.state.socialRecord) {
-            return (<SearchResults socialRecord={ this.state.socialRecord }/>);
+            return (<SearchResults socialRecord={ this.state.socialRecord } errorMessage=""/>);
         } else {
-            return (<SearchResults error={ this.state.errorMessage }/> );
+            console.log("else");
+            return (<SearchResults errorMessage={ this.state.errorMessage } socialRecord=""/>);
         }
     }
 
@@ -40,6 +43,7 @@ class Home extends Component {
                         <SearchBar searchCallback={ this.gotResults }/>
                         <hr />
                         {this.state.socialRecord? this.displayResults(): ''}
+                        {this.state.errorMessage? this.displayResults(): ''}
                     </div>
                 </div>
             </div>

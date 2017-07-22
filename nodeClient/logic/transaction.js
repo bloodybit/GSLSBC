@@ -31,24 +31,29 @@ function createRawTrans(functionName, socialRecordData) {
         if (!window.currentWallet) {
             reject('ERROR: No wallet set');
         }
-        // TODO: Take it from the GSLS
+
         let nonce = ''; //web3.toHex(web3.eth.getTransactionCount(window.currentWallet.address));
         let gasPrice = config.gasPrice.hex; //web3.toHex(web3.eth.gasPrice);
         let gasLimit = config.gasLimit.hex; //web3.toHex(4700000);
 
         // get the account nonce from the GSLS
         Api
-            .get(`${config.gsls}/account/${window.currentWallet.address}/nonce`)
-            .then(response => {
-                console.info(`Nonce ${response.nonce} retrived from GSLS`);
-                nonce = web3.toHex(response.nonce);
+            .get(`${config.gsls}/account/${window.currentWallet.address}/txninfo`)
+            .then(txInfo => {
+                console.info(`INFO: Parameters retrived from GSLS`, txInfo);
 
-                if (!(nonce && gasPrice && gasLimit)) {
-                    reject('ERROR: Parameters are missed or not generated');
+                nonce = web3.toHex(txInfo.nonce);
+                gasPrice = web3.toHex(txInfo.price) || config.gasPrice.hex;
+                gasLimit = web3.toHex(txInfo.limit) || config.gasLimit.hex;
+
+                if (!(nonce || gasPrice || gasLimit)) {
+                    reject('ERROR: Parameters are missing or not generated');
                 }
 
+                // get function call data field in hex
                 const transactionPayload = convertDataToHex(functionName, socialRecordData);
 
+                // raw transaction params
                 const txParams = {
                     nonce,
                     gasPrice,
@@ -60,12 +65,14 @@ function createRawTrans(functionName, socialRecordData) {
                     chainId: 3
                 }
 
-                console.info(`INFO:`, txParams);
+                console.info(`INFO: `, txParams);
 
+                // create transaction and sign it
                 let tx = new Transaction(txParams);
                 let privateKey = Buffer.from(window.currentWallet.privateKey.substr(2), 'hex');
                 tx.sign(privateKey);
 
+                // serialise it 
                 let serializedTx = `0x${tx.serialize().toString('hex')}`;
                 console.info(`INFO: ${serializedTx}`);
 
@@ -76,12 +83,13 @@ function createRawTrans(functionName, socialRecordData) {
                 console.error(`ERROR: `, error);
                 reject(`ERROR: The GSLS wasn't ablet to return the nonce`)
             });
-
-
     });
 }
 
 // converts the method definition into an hex interface (for raw transactions)
+// the data field is composed by:
+//  - methodId
+//  - parameter hashes 
 function convertDataToHex(functionName, values) {
     console.log(`prepareData...`);
     // get the function definition 

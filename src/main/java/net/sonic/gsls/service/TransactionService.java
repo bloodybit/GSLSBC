@@ -13,7 +13,7 @@ public interface TransactionService {
 
     String sendRawTransaction(String hexValue);
 
-    String getSocialRecord(String globalID);
+    String getSocialRecord(String globalID) throws ExecutionException;
 
     BigInteger getNonce(String address);
 

@@ -33,6 +33,7 @@ class SearchBar extends Component {
                 self.props.searchCallback(null, socialRecord);
             })
             .catch(error => {
+                self.setState({buttonText: self.defaultButtonText});
                 self.props.searchCallback(error, null);
             });
         

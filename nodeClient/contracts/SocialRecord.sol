@@ -48,11 +48,23 @@ contract SocialRecord {
         }
     }
     
+    modifier ifNotExists(string _globalId) {
+       if(!users[msg.sender].exists && !srs[_globalId].exists) {
+            _;
+        } 
+    }
+    
+    modifier ifUserAllowed(string _globalId) {
+        if(srs[_globalId].exists && (sha3(users[msg.sender].globalId) == sha3(_globalId))) {
+            _;
+        } 
+    }
+    
     // Constructor
     function SocialRecord(){
         owner = msg.sender;
         // set the contract creator
-        users[msg.sender] = User("Creator", true);
+        // users[msg.sender] = User("Creator", true);
     }
 
     // Events
@@ -66,12 +78,16 @@ contract SocialRecord {
     }
 
     // add a Social Record: only a non-user can create it and the globalId has to be new. 
-    function addSocialRecord(string _globalId, string _socialRecordString) returns (bool, string) {
+    function addSocialRecord(string _globalId, string _socialRecordString) ifNotExists(_globalId) returns (bool, string) {
         
         if (srs[_globalId].exists) {
-            return (false, ""); 
+            return (false, "It is not possible to create this social record"); 
         }
-
+        
+        if (users[msg.sender].exists) {
+            return (false, "This user already exists");
+        }
+        
         srs[_globalId] = SR(_socialRecordString, true);
         users[msg.sender] = User(_globalId, true);
         SocialRecordAdded(msg.sender, _globalId, _socialRecordString);
@@ -91,7 +107,7 @@ contract SocialRecord {
 
     // update a Social Record 
     // TODO: import library to compare strings 
-    function updateSocialRecord(string _globalId, string _socialRecordString) returns (bool, string){
+    function updateSocialRecord(string _globalId, string _socialRecordString) ifUserAllowed(_globalId) returns (bool, string){
         
         // the user is the owner of the social record 
         if (sha3(users[msg.sender].globalId) != sha3(_globalId)) {
