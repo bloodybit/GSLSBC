@@ -10,13 +10,6 @@ The SONIC project has been developed under suggestion of Telekom Innovation Labo
 
 The project is supported by a distributed and domain-independent ID management architecture where a GSLS (Global Social Lookup System) is employed to map Global ID to URL of a social profile. This mapping is possible thanks to datasets called Social Records (SR) which are digitally signed.
 
-\subsection{GSLS}
-The current implementation of the GSLS is implemented in Java Spring-Boot and is exposing APIs for creating, updating and  querying the Social Records. The Social Records are stored in  Distributed Hash Table (DHT) and RSA private-public key encryption is used for validation of the records. However, there is a security issue with this implementation because someone can spawn a malicious node in the DHT which contains validated (signed by the real user), but outdated (old) data and not the most recent one, and there is no way to detect this. The data is checked against the user’s public key and it is considered valid if the signature is correct, but we cannot be sure if this data is the most recent one.
-
-To overcome this security issue, we have been working on an implementation which stores the Social Records on the Blockchain, since the Blockchain is immutable distributed ledger of transactions which can be followed in order to determine the most recent state of the SR.
-
-In order to achieve this, we are building an application which exposes REST-ful APIs for creation, modification and retrieving of SR that makes use of the Blockchain technology. Additionally, the service architecture needs to be distributed, without single point of failure and it needs to prevent attempts to write crafted datasets or overwrite datasets.
-
 \subsection{Blockchain}
 Blockchain is a type of distributed ledger or decentralized database that keeps records of digital transactions. Rather than having a central administrator like a traditional database (think banks, governments and accountants), a distributed ledger has a network of replicated databases, synchronized via the internet and visible to anyone within the network. Blockchain networks can be private with restricted membership similar to an intranet, or public, like the Internet, accessible to any person in the world.
 
@@ -54,10 +47,10 @@ Blockchain technology may offer a way to circumvent these problems by delivering
 \section{BCIMS: Blockchain Identity Management System}
 The aim of this project is to build a blockchain-based, distributed system for self-asserted identities for Distributed Online Social Networks (DOSN) in the Sonic ecosystem. The mission is to:  first research the state of the art regarding to identity management and blockchains; then conceptualize and design a service to manage self-asserted identities in a blockchain; and finally implement and evaluate the designed solution. 
 
-The main motivation that drive this project is that the GSLS is ...
+\subsection{GSLS Problem And Solution}
+The current implementation of the GSLS is implemented in Java Spring-Boot and is exposing APIs for creating, updating and  querying the Social Records. The Social Records are stored in  Distributed Hash Table (DHT) and RSA private-public key encryption is used for validation of the records. However, there is a security issue with this implementation because someone can spawn a malicious node in the DHT which contains validated (signed by the real user), but outdated (old) data and not the most recent one, and there is no way to detect this. The data is checked against the user’s public key and it is considered valid if the signature is correct, but we cannot be sure if this data is the most recent one.
 
-\begin{notation}
-  @Stefan can you finish this? \\
-  - GSLS problem \\
-  - Why blockchain \\
-\end{notation}
+To overcome this security issue, we have been working on an implementation which stores the Social Records on the Blockchain, since the Blockchain is immutable distributed ledger of transactions which can be followed in order to determine the most recent state of the SR.
+
+In order to achieve this, we are building an application which exposes REST-ful APIs for creation, modification and retrieving of SR that makes use of the Blockchain technology. Additionally, the service architecture needs to be distributed, without single point of failure and it needs to prevent attempts to write crafted datasets or overwrite datasets.
+
