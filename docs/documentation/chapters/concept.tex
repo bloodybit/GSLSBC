@@ -1,5 +1,68 @@
 \chapter{Concept and Design}
 \label{chapter:concept}
+
+This chapter holds and explains in detail the different approaches taken into consideration in order to store social records. Before doing so, it is important to define some terms and conventions which are going to be used in the following sections and chapters. The terms are particularly related to Ethereum, the chosen blockchain implementation. 
+
+\section{Project Dictionary And Legend}
+
+\subsection*{Ethereum Accounts}
+As stated in the Ethereum white paper, the state is made up of objects called accounts, with each account having a 20-byte address. All the state transitions are represented as direct transfers of value and information between accounts. An Ethereum account contains four fields: 	
+\begin{list}{}{}
+\item \textbf{The nonce}: a counter used to make sure each transaction can only be processed once;
+\item \textbf{Balance}: the account's current ether balance;
+\item \textbf{Code}: the account's contract code, if present;
+\item \textbf{Storage}: the account's storage (empty by default).
+\end{list}
+There are two types of account: 
+\begin{list}{}{}
+\item \textbf{Externally owned accounts}: controlled by private keys. It has no code, and one can send messages from an externally owned account by creating and signing a transaction. 
+\item \textbf{Contact accounts}: controlled by contract code. Every time the contract account receives a message its code activates, allowing it to read and write to internal storage and send other messages or create contracts in turn. The contract live as autonomous agents inside the Ethereum execution environment. Wallet accounts are nothing but particular type of contract accounts \cite{EthereumWhitePaper}
+\end{list}
+
+\subsection*{Account Key Pair}
+Each account holds a key pair stored in a file called "UTC JSON Keystore File". This file is password encrypted and it is possible to unlock it only by knowing the pass phrase. The private key is generally used to sign transactions, while the public one is used to identify the account all over the Ethereum network. 
+
+The key pair is generated using an algorithm called \textit{secp256k1}, based on elliptic curves cryptography which is more secure and efficient of any algorithm based on RSA. In particular, the private key is a 64-character long hexadecimal string. It is randomly generated at the moment of the account creation. The public key is generated starting from the private one and is publicly accessible. The account address is nothing but a part of the hash of the public key (in particular, the last 20 bytes of the keccak-256 hash of the public key).
+
+\subsection*{Transaction}
+The term "transaction" is used in Ethereum to refer to the signed data package that stores a message to be sent from an externally owned account. Transactions contain:
+\begin{list}{}
+\item The recipient of the message; 
+\item A signature identifying the sender;
+\item The amount of ether to transfer from the sender to the recipient;
+\item An optional data field;
+\item A "start gas" value, representing the maximum number of computational steps the transaction execution is allowed to take; and
+\item A "gas price" value, representing the fee the sender pays per computational step.
+\end{list}
+
+\subsection*{Raw Transaction}
+All transactions need to be signed otherwise they are considered invalid transactions and will not be included in the blockchain. A raw transaction is a transaction in raw bytes. If one has the raw bytes of a valid transaction, they can send it to the blockchain. Otherwise, web3.js -- the library provided by Ethereum to interact with the blockchain -- automatically creates the signed transaction bytes as part of the default implementation. The library converts the JSON transaction to the raw bytes and automatically signs them. In a raw transaction nothing is done automatically, but it is developer's responsibility to first convert each parameter then sign the transaction and eventually send it to a node. 
+
+Using some javascript libraries (like ethereumjs-tx) raw transactions can be created and signed offline. After the creation, they can be serialised and sent to the GSLS which is accountable of sending the transaction to the blockchain. 
+
+\subsection*{Ethereum Node}
+A node is a piece of software that connects to other nodes, thus participating in the formation of the network. A node stores an entire copy of the blockchain, and a node may mine (but doesn't have to). All interaction with the blockchain (interaction with contracts, etc) needs to go via a node. It is also referred to as "blockchian client". 
+
+\subsection*{Mining}
+Mining is a computationally intensive work that requires a lot of processing power and time. Mining is the act of participating in a given peer distributed crypto-currency network in consensus. The miner is subsequently rewarded for providing solutions to challenging math problems. It is done by putting the computers hardware to use with mining applications.
+
+\subsection*{Other Terms}
+\begin{center}
+ \begin{tabular}{| l | p{10cm} |} 
+ \hline
+ \textbf{Term} & \textbf{Definition} \\
+ \hline
+User & The one that owns a social record and has the right to create and update it as well as to search for other social records. The user does this by interacting with an application, the GSLS client. \\ 
+ \hline
+ GSLS client & It is a piece of code that allows the user to interact and send request to the GSLS server. In our last approach, the client is implemented as a Desktop application. \\
+ \hline
+ GSLS server & The GSLS server is a piece of code that exposes api callable by the GSLS client via HTTP protocol. The server is also a blockchain client in that it is either connected to an Ethereum node or it is an actual node in the network. \\
+ \hline
+ GSLS Administrator & Whoever spawns a GSLS server instance and has its control, meaning that she can start and stop it at will. \\
+ \hline
+\end{tabular}
+\end{center}
+
 \section{Approaches to Store Social Records}
 \subsection{Store the Social Record}
 The most intuitive solution would be to switch from the DHT to the Blockchain, moving each social record through a transaction. 
@@ -11,19 +74,18 @@ In particular the limit for the data structure is 44kb, but is best practice to 
 	\item Looking up would not be efficient.
 \end{itemize}
 
-
-\subsection{Storing the Hash}
+\subsection{Storing The Hash}
 This solution is inspired by Blockstack architecture and requires to create a DHT to map the GlobalID to the address of the transaction contained inside the blockchain.
 
 The hash of the Social Record is stored in the data field of the transaction in the Blockchain. In this manner, the blockchain has the role of validation infrastructure rather than storage system. The actual data is stored in the distributed hash table. This solution could be vulnerable in case a malicious node tries to restore an old version of the social record by injecting the wrong address in the DHT table, causing a corrupted record.
 
-\subsection{Using a third-party solution}
+\subsection{Using A Third-Party Solution}
 Blockstack offers an already implemented solution using a layered architecture similar to the one proposed in solution 2. It also allows to choose among different blockchain implementations and storage systems. Nevertheless, the underlying idea is the same as solution 2: use the blockchain as a validation system and use a DHT to map ids (keys/GlobalIDs) with the corresponding values (Social Records).
 
 According to Blockstack, the applications built on this system are serverless and decentralized. Developers start by building a single-page application in Javascript. Then, instead of plugging the frontend into a centralized API, they plug into an API run by the user. Developers install a library called ’blockstack. js’ and do not have to worry about running servers, maintaining databases, or building out user management systems [add reference].
 
 
-\section{How to Store the Social Records}
+\section{How To Store The Social Records}
 It is important to understand how to write transactions in the blockchain, in particular in an ethereum contract.
 
 Given the fact that the GSLS is an open source, and not centrally managed server, a safety threat may arise.
@@ -100,21 +162,7 @@ Because of this lack the described process cannot be pursued.
 	Needs to decide which one to maintain.
 \end{notation}
 
-\section{Dictionary / Nomenclature}
-\begin{notation}
-	TODO: Make it table
-\end{notation}
-User- The find entity that owns a social record, concrete it, upload, deliver or retrieve it.
-
-Server- The GSLS system can be converted to an Ethereum node with few more functionalities such as an API request interface listening for communication from the client.
-
-Blockchain - the Blockchain is referred as an entity where to store records with transactions.
-
-Transaction- Is an operation that aims at changing the status of the BC through authorized inputs.
-
-Contract - Operations that needs to be performed in particulars contracts when not specified in the doc contract and solidity contract are considered synonyms.
-
-\section{Using wallet without hosting an Ethereum Node}
+\section{Using Accounts Without Hosting An Ethereum Node}
 
 The last approach that this paper wants to explain requires the users to create an Ethereum wallet but not to host an Ethereum node and can ensure a complete and working implementation without the DHT.
 
@@ -128,11 +176,11 @@ This could lead to suspicion over this authentication system because the common 
 
 
 \section{Possible Approaches}
-\subsection{Keep the DHT and verify the authenticity of the Social Record with the blockchain}
-The first approach is both, cheap and light. It keeps the DHT implementation and aims to integrate the Blockchain in order to detect malicious changes in the SR stored in the DHT itself.
+\subsection{DHT Supported By The Blockchain As A Validation System}
+The first approach is based on the Blockstack architecture and is both cheap and light. The GSLS network is still connected using a DHT and It holds all the social record data like the original implementation. The Blockchain would come into play as a supporting data structure used by the GSLS to validate the social records and detect malicious changes.
 
 \subsubsection{How does it work}
-\paragraph{Creation \& Update}
+\paragraph{Creation And Update}
 
 This implementation does not require the client to host an Ethereum node, but needs a wallet per each user.
 
@@ -155,7 +203,7 @@ Unfortunately, the solution can only detect unauthorised changes but not rollbac
 \subsection{Without DHT and Etherereum Accounts for the Users}
 This approach merges the security and immutability of the Blockchain without forcing the User to have a wallet or Ethereum account. Nevertheless, it is important to keep in mind that the server that contacts the Blockchain must run a BC node. In our prototype we can imagine the GSLS as a Server hosting in Ethereum Node and implementing some functionalities explained here below.
 
-\subsubsection{How does it work}
+\subsubsection{How Does It Work?}
 
 \paragraph{Creation}
 
@@ -173,14 +221,14 @@ In order to update the SR, the User application needs to retrieve the number of 
 
 Get is pretty trivial, asking for a GlobalId, and then the SR is returned. 
 
-\subsection{User with Ethereum Wallet}
+\subsection{User With Ethereum Wallet}
 
 This approach requires the users to have an Ethereum wallet but not to run an Ethereum node.
 This is optimal because it allows the users to update their credentials even without trusting 3rd party service. Ideally, it is possible to create and change the record even from a different devices such as PC or smartphone.
 
 It is enough to provide the wallet .json file.
 
-\subsubsection{How does it work}
+\subsubsection{How Does It Work?}
 \paragraph{Creation \& Update}
 
 Once the wallet json file is loaded into the application it is possible to create the social record, sign it with the private key; thus creating the transaction normally. This signed transaction is then uploaded(passed) to the server and then to the BC wallet file json.

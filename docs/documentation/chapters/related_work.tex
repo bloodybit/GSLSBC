@@ -5,7 +5,7 @@
 Also known as name service, maps the names of network resources to their respective network addresses. Each resource on the network is considered an object by the directory server. Information about a particular resource is stored as a collection of attributes associated with that resource or object. One of the most representing example is the DNS, which offers internet domain names translation to ip addresses.
 
 \section{DHT and P2P Networks}
-A distributed hash table (DHT) is a class of a decentralised distributed system that provides a lookup service similar to a hash table: (key, value) pairs are stored in a DHT, and any participating node can efficiently retrieve the value associated with a given key
+A distributed hash table (DHT) is a class of a decentralised distributed system that provides a lookup service similar to a hash table: (key, value) pairs are stored in a DHT, and any participating node can efficiently retrieve the value associated with a given key. We took into consideration tomP2P as it is based on Kademlia, one of the most successful DHT (e.g Gnutella and IPFS are using it). 
 
 \subsection{DHT characteristics}
 \begin{list}{}{}
@@ -23,12 +23,6 @@ Once these components are in place, a typical use of the DHT for storage and ret
 Each node maintains a set of links to other nodes (its neighbors or routing table). Together, these links form the overlay network. A node picks its neighbors according to a certain structure, called the network's topology.
 
 Aside from routing, there exist many algorithms that exploit the structure of the overlay network for sending a message to all nodes, or a subset of nodes, in a DHT. These algorithms are used by applications to do overlay multicast, range queries, or to collect statistic. (Flooding).
-
-\subsection*{Implementations Considered}
-\begin{list}{}{}
-\item Kademlia
-\item TomP2P
-\end{list}
 
 \section{Blockchain Implementations}
 
@@ -65,18 +59,21 @@ Ethereum is a  decentralized platform that runs smart contracts: applications th
 These apps run on a custom built  blockchain, an enormously powerful shared global infrastructure that can move value around and represent the ownership of property. This enables developers to create markets, store registries of debts or promises, move funds in accordance with instructions given long in the past (like a will or a futures contract) and many other things that have not been invented yet, all without a middle man or counterparty risk.
 On traditional server architectures, every application has to set up its own servers that run their own code in isolated silos, making sharing of data hard. If a single app is compromised or goes offline, many users and other apps are affected.
 On a blockchain, anyone can set up a node that replicates the necessary data for all nodes to reach an agreement and be compensated by users and app developers. This allows user data to remain private and apps to be decentralized like the Internet was supposed to work.
+
 \subsection*{Storj}
 Storj is a peer-to-peer cloud storage network implementing client-side encryption would allow users to transfer and share data without reliance on a third party storage provider. The removal of central controls would mitigate most traditional data failures and outages, as well as significantly increase security, privacy, and data control. Peer-to-peer networks are generally unfeasible for production storage systems, as data availability is a function of popularity, rather than utility.
+
 \subsection*{Swarm}
 Swarm is a distributed storage platform and content distribution service, a native base layer service of the ethereum web 3 stack. The primary objective of Swarm is to provide a decentralized and redundant store of Ethereum's public record, in particular to store and distribute dapp code and data as well as block chain data.
 From the end user's perspective, Swarm is not that different from WWW, except that uploads are not to a specific server. The objective is to peer-to-peer storage and serving solution that is DDOS-resistant, zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer to peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution, service payments and content availability insurance.
+
 \subsection*{IPFS}
 The InterPlanetary File System (IPFS) is a peer-to-peer distributed file system that seeks to connect all computing devices with the same system of files. In some ways, IPFS is similar to the Web, but IPFS could be seen as a single BitTorrent swarm, exchanging objects within one Git repository. In other words, IPFS provides a high throughput content-addressed block storage model, with contentaddressed hyper links. This forms a generalized Merkle DAG, a data structure upon which one can build versioned file systems, blockchains, and even a Permanent Web. IPFS combines a distributed hashtable, an incentivized block exchange, and a self-certifying namespace. IPFS has no single point of failure, and nodes do not need to trust each other.
+
 \subsection*{Filecoin}
 Filecoin is a distributed electronic currency similar to Bitcoin. Unlike Bitcoin’s computation-only proof-of-work, Filecoin’s proof-of-work function includes a proof-of-retrievability component, which requires nodes to prove they store a particular file. The Filecoin network forms an entirely distributed file sorage system, whose nodes are incentivized to store as much of the entire network’s data as they can. The currency is awarded for storing files, and is transferred in transactions, as in Bitcoin. Files are added to the network by spending currency. This produces strong monetary incentives for individuals to join and work for the network. In the course of ordinary operation of the Filecoin network, nodes contribute useful work in the form of storage and distribution of valuable data.
 
 \subsection*{BigChainDB}
-
 BigChainDB is aiming to merge database and Blockchain, trying to keep all the properties of the first such as a lineat scaling throuhput, an efficient query language and permissions in order to interact with it. In particular developing a MongoDB based NoSQL distributed database.
 With the foundamental features of Blockchain as decentralisation, immutability, creation and movement of digital assets.
 One interesting approach with BigChainDB is that it can be integrated with Ethereum (sort of its database) and be run on private or public networks.
@@ -103,7 +100,9 @@ The architecture is shown in \ref{fig:blockstack-architecture}.
 \section{Solidity}
 Solidity is a high level programming language developed specially for Ethereum block chain. Solidity introduced smart contracts which is a base for different use cases like supply chain platforms, Banks, health care system etc. Smart contracts are executed by a computer network that uses consensus protocols to agree upon certain actions resulting from the smart’s contract code. Like other programming languages Solidity support inheritance, user defined types, libraries, control structures, comments and a lot more features. Syntax of solidity language is similar to java script. Due to that reason web developers and programmer can adopt it in very short period of time.
 
-Solidity is still in its early stage while non Ethereum projects are also involved to use solidity. Every language has their own weaknesses while in solidity a lot of things to be improved in near future. Theoretically it’s easy to talk about in idea but in reality it’s impossible to implement every idea in solidity. Solidity was the best fit for our project “identity management in block chain” through which we created contracts for Ethereum block chain.
+Solidity is still in its early stage while non Ethereum projects are also involved to use solidity. Every language has their own weaknesses while in solidity a lot of things to be improved in near future. Theoretically it’s easy to talk about in idea but in reality it’s impossible to implement every idea in solidity. Solidity was the best fit for our project \textit{identity management in blockchain} through which we created contracts for Ethereum block chain.
+
+\section{Public Key Cryptography}
 
 \subsection{Elliptic Curves}
 ECC is the next generation of public key cryptography, and based on currently understood mathematics, it provides a significantly more secure foundation than first-generation public key cryptography systems like RSA.
