@@ -1,6 +1,5 @@
 package net.sonic.gsls.service;
 
-import net.sonic.gsls.contract.SocialRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.annotation.Value;
