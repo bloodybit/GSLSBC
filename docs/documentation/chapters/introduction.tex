@@ -2,19 +2,20 @@
 \label{introduction}
 
 \section{Background}
+
 \subsection{SONIC Project}
 Today’s communication happens mostly through Online Social Network (OSN), but with their proliferation, some problems have arisen. The main issue is related to the fact that OSN are built in a closed an proprietary manner (think of Facebook, Twitter or LinkedIn) and don’t allow a smooth  communication among them. Therefore, the user is forced to create different accounts, and build different networks within for every platform. All this accounts and information correspond to the same user, but are heavily segregated from one another. This segregation is caused by the platform which aim to bind the user with a lock-in effect.
 
-The SONIC project has been developed under suggestion of Telekom Innovation Laboratories to overcome this problem and facilitate a seamless connectivity between different OSN \citep{gondor2014sonic} allowing the migration of accounts between different platforms.
+The SONIC project has been developed under suggestion of Telekom Innovation Laboratories to overcome this problem and facilitate a seamless connectivity between different OSN \cite{gondor2014sonic} allowing the migration of accounts between different platforms.
 
-The project is supported by a distributed and domain-independent ID management architecture where a GSLS (Global Social Lookup System) is employed to map Global ID to URL of a social profile. This mapping is possible thanks to datasets called Social Records which are digitally signed.
+The project is supported by a distributed and domain-independent ID management architecture where a GSLS (Global Social Lookup System) is employed to map Global ID to URL of a social profile. This mapping is possible thanks to datasets called Social Records (SR) which are digitally signed.
 
 \subsection{GSLS}
 The current implementation of the GSLS is implemented in Java Spring-Boot and is exposing APIs for creating, updating and  querying the Social Records. The Social Records are stored in  Distributed Hash Table (DHT) and RSA private-public key encryption is used for validation of the records. However, there is a security issue with this implementation because someone can spawn a malicious node in the DHT which contains validated (signed by the real user), but outdated (old) data and not the most recent one, and there is no way to detect this. The data is checked against the user’s public key and it is considered valid if the signature is correct, but we cannot be sure if this data is the most recent one.
 
 To overcome this security issue, we have been working on an implementation which stores the Social Records on the Blockchain, since the Blockchain is immutable distributed ledger of transactions which can be followed in order to determine the most recent state of the SR.
 
-In order to achieve this, we are building an application which exposes REST-ful APIs for creation, modification and retrieving of SL that makes use of the Blockchain technology. Additionally, the service architecture needs to be distributed, without single point of failure and it needs to prevent attempts to write crafted datasets or overwrite datasets.
+In order to achieve this, we are building an application which exposes REST-ful APIs for creation, modification and retrieving of SR that makes use of the Blockchain technology. Additionally, the service architecture needs to be distributed, without single point of failure and it needs to prevent attempts to write crafted datasets or overwrite datasets.
 
 \subsection{Blockchain}
 Blockchain is a type of distributed ledger or decentralized database that keeps records of digital transactions. Rather than having a central administrator like a traditional database (think banks, governments and accountants), a distributed ledger has a network of replicated databases, synchronized via the internet and visible to anyone within the network. Blockchain networks can be private with restricted membership similar to an intranet, or public, like the Internet, accessible to any person in the world.
@@ -29,26 +30,34 @@ Blockchain’s decentralized, open and cryptographic nature allow people to trus
 
 Blockchains are secure by design and are an example of a distributed computing system with high Byzantine fault tolerance.
 
-
 \subsection{Identity Management}
 \begin{notation}
   Add the references
 \end{notation}
 
-Identity management refers to the process of employing emerging technologies to manage information about the identity of users and control access to company resources\citep{IdentityManagement}. The goal of identity management is to improve productivity and security while lowering costs associated with managing users and their identities, attributes, and credentials.
+Identity management refers to the process of employing emerging technologies to manage information about the identity of users and control access to company resources \cite{IdentityManagement}. The goal of identity management is to improve productivity and security while lowering costs associated with managing users and their identities, attributes, and credentials.
 
 Everyone is using internet to interact with different digital service platforms.
 It has many forms like accessing social sites, online shopping services, and interacting with your online banking account. Interactions with these service providers require that each user has digital identity so that user is authorized to access digital platform. There are certain reasons digital platform uses identities and storing all the information related to the user to grow their business and improve user experiences, and defend against certain attacks externally as well as to take care of the privacy of the user.
 
-Identities were used in different ways like accessing personal computer we use only username and password. Digital platforms on the other hand like Facebook, Yahoo use a domain name with a combination of a username to isolate users because these platforms have many users so domain name can make username uniquely identifiable\citep{gondor2016distributed}.
+Identities were used in different ways like accessing personal computer we use only username and password. Digital platforms on the other hand like Facebook, Yahoo use a domain name with a combination of a username to isolate users because these platforms have many users so domain name can make username uniquely identifiable \cite{gondor2016distributed}.
 
-The problem in these digital platforms is the absence of federated directories.User' often forget sign credential when they have many different ones. It also increases administrative overhead when we have separate credential for each application. Microsoft defines federation as “the technology and business arrangements necessary for the interconnecting of users, applications, and systems. This includes
-authentication, distributed processing and storage, data sharing, and more\citep{IdentityManagement}.”
+The problem in these digital platforms is the absence of federated directories. Users often forget sign credential when they have many different ones. It also increases administrative overhead when we have separate credential for each application. Microsoft defines federation as "the technology and business arrangements necessary for the interconnecting of users, applications, and systems. This includes
+authentication, distributed processing and storage, data sharing, and more." \cite{IdentityManagement}
 
 Federated directories interact and trust each other, thus allowing secure information sharing between applications. Companies are currently running isolated, independent directories that neither interact with nor trust each other.
-This is a result of applications having their own proprietary identity stores. Each
-proprietary directory requires its own method of user administration, user
-provisioning, and user access control. The problem with proprietary identity stores is that users require login for every application, which in turn burdens users with having to remember numerous username and password combinations.
+This is a result of applications having their own proprietary identity stores. Each proprietary directory requires its own method of user administration, user provisioning, and user access control. The problem with proprietary identity stores is that users require login for every application, which in turn burdens users with having to remember numerous username and password combinations.
 
-The need for blockchain based identity management is particularly noticeable in the internet age,we have faced identity management challenges since the dawn of the Internet. Prime among them: security, privacy, and usability\citep{Blockchain}.
+The need for blockchain based identity management is particularly noticeable in the internet age, we have faced identity management challenges since the dawn of the Internet. Prime among them: security, privacy, and usability \cite{Blockchain}.
 Blockchain technology may offer a way to circumvent these problems by delivering a secure solution without the need for a trusted, central authority. It can be used for creating an identity on the blockchain, making it easier to manage for individuals, giving them greater control over has personal information and how they access it.
+
+\section{BCIMS: Blockchain Identity Management System}
+The aim of this project is to build a blockchain-based, distributed system for self-asserted identities for Distributed Online Social Networks (DOSN) in the Sonic ecosystem. The mission is to:  first research the state of the art regarding to identity management and blockchains; then conceptualize and design a service to manage self-asserted identities in a blockchain; and finally implement and evaluate the designed solution. 
+
+The main motivation that drive this project is that the GSLS is ...
+
+\begin{notation}
+  @Stefan can you finish this? \\
+  - GSLS problem \\
+  - Why blockchain \\
+\end{notation}
