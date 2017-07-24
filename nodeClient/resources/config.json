@@ -1,6 +1,6 @@
 {
-    "contractAddress": "0xde7F35cffA5E26Ed3decD773EE355736F5b78A93",
-    "testContractAddress": "0x68d2300251f63e1f0d3fb1c6c83cff9cb97f129d",
+    "contractAddress": "0x4415948a738Addf2d83755E652B8cfe12bA00cd5",
+    "testContractAddress": "0x4415948a738Addf2d83755E652B8cfe12bA00cd5",
     "hostname": "localhost",
     "port": "2002",
     "gsls": "http://localhost:2002",
@@ -11,5 +11,6 @@
     "gasLimit": {
         "hex": "0x47b760",
         "wei": 4700000
-    }
+    },
+    "demo": true
 }

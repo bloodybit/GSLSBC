@@ -43,7 +43,13 @@ function createRawTrans(functionName, socialRecordData) {
                 console.info(`INFO: Parameters retrived from GSLS`, txInfo);
 
                 nonce = web3.toHex(txInfo.nonce);
-                gasPrice = web3.toHex(txInfo.price) || config.gasPrice.hex;
+
+                if (config.demo) {
+                    gasPrice = config.gasPrice.hex;
+                } else {
+                    gasPrice = web3.toHex(txInfo.price) || config.gasPrice.hex;
+                }
+
                 gasLimit = web3.toHex(txInfo.limit) || config.gasLimit.hex;
 
                 if (!(nonce || gasPrice || gasLimit)) {
