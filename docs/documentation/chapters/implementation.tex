@@ -20,11 +20,7 @@ This information is needed to create the row transaction before sending it to th
 The User can create a new social record or modify an existing one (of course, only if he is allowed to).
 When the user clicks on the “submit” Button the following operations are performed:
 
-<<<<<<< Updated upstream
-\begin{list}{},
-=======
 \begin{itemize}
->>>>>>> Stashed changes
   \item \textbf{To Address}: convert the address of the receiver (in this case the contract) to Hex
   \item \textbf{Get the Gas price}: the gas price is changing constantly, and in order to set the right amount, it is required to run a get HTTP request to the GSLS server.
   \item \textbf{Gas Limit}: the maximum amount of Gas that the user wants to spend for the transaction to flex.
@@ -51,7 +47,7 @@ The following interfaces are needed:
     \item The body of the request only contains a signed transaction. The transaction is pushed into the blockchain and the hash of it returned. The hash is useful because starting from that is possible to check the status of the transaction (e.g. on https://ropsten.etherscan.io).
     \item It is possible to create a notification system based on polling, with the client asking for the good or bad result of the operation. It is not possible to send the result in the same HTTP response since it could take more than 90 seconds and therefore time out the request.
   \end{itemize}
-  
+
 \subsection{GET /socialrecord/:GlobalID}
 The Server receives an HTTP request with one Global ID as parameter. It gets the social record from the blockchain with the help of the ethereum contract function and then it sends it back to the client as an HTTP response.
 In this case, it is not required to set up the polling mechanism because the get transaction operates on constant values and therefore does not need to be mined (the mining operation usually takes more time, in Ethereum from 30 seconds to potentially infinite).

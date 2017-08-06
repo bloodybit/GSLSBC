@@ -1,33 +1,33 @@
 \chapter{Concept and Design}
 \label{chapter:concept}
 
-This chapter holds and explains in detail the different approaches taken into consideration in order to store social records. Before doing so, it is important to define some terms and conventions which are going to be used in the following sections and chapters. The terms are particularly related to Ethereum, the chosen blockchain implementation. 
+This chapter holds and explains in detail the different approaches taken into consideration in order to store social records. Before doing so, it is important to define some terms and conventions which are going to be used in the following sections and chapters. The terms are particularly related to Ethereum, the chosen blockchain implementation.
 
 \section{Project Dictionary And Legend}
 
 \subsection*{Ethereum Accounts}
-As stated in the Ethereum white paper, the state is made up of objects called accounts, with each account having a 20-byte address. All the state transitions are represented as direct transfers of value and information between accounts. An Ethereum account contains four fields: 	
+As stated in the Ethereum white paper, the state is made up of objects called accounts, with each account having a 20-byte address. All the state transitions are represented as direct transfers of value and information between accounts. An Ethereum account contains four fields:
 \begin{list}{}{}
 \item \textbf{The nonce}: a counter used to make sure each transaction can only be processed once;
 \item \textbf{Balance}: the account's current ether balance;
 \item \textbf{Code}: the account's contract code, if present;
 \item \textbf{Storage}: the account's storage (empty by default).
 \end{list}
-There are two types of account: 
+There are two types of account:
 \begin{list}{}{}
-\item \textbf{Externally owned accounts}: controlled by private keys. It has no code, and one can send messages from an externally owned account by creating and signing a transaction. 
+\item \textbf{Externally owned accounts}: controlled by private keys. It has no code, and one can send messages from an externally owned account by creating and signing a transaction.
 \item \textbf{Contact accounts}: controlled by contract code. Every time the contract account receives a message its code activates, allowing it to read and write to internal storage and send other messages or create contracts in turn. The contract live as autonomous agents inside the Ethereum execution environment. Wallet accounts are nothing but particular type of contract accounts \cite{EthereumWhitePaper}
 \end{list}
 
 \subsection*{Account Key Pair}
-Each account holds a key pair stored in a file called "UTC JSON Keystore File". This file is password encrypted and it is possible to unlock it only by knowing the pass phrase. The private key is generally used to sign transactions, while the public one is used to identify the account all over the Ethereum network. 
+Each account holds a key pair stored in a file called "UTC JSON Keystore File". This file is password encrypted and it is possible to unlock it only by knowing the pass phrase. The private key is generally used to sign transactions, while the public one is used to identify the account all over the Ethereum network.
 
 The key pair is generated using an algorithm called \textit{secp256k1}, based on elliptic curves cryptography which is more secure and efficient of any algorithm based on RSA. In particular, the private key is a 64-character long hexadecimal string. It is randomly generated at the moment of the account creation. The public key is generated starting from the private one and is publicly accessible. The account address is nothing but a part of the hash of the public key (in particular, the last 20 bytes of the keccak-256 hash of the public key).
 
 \subsection*{Transaction}
 The term "transaction" is used in Ethereum to refer to the signed data package that stores a message to be sent from an externally owned account. Transactions contain:
 \begin{list}{}
-\item The recipient of the message; 
+\item The recipient of the message;
 \item A signature identifying the sender;
 \item The amount of ether to transfer from the sender to the recipient;
 \item An optional data field;
@@ -36,23 +36,23 @@ The term "transaction" is used in Ethereum to refer to the signed data package t
 \end{list}
 
 \subsection*{Raw Transaction}
-All transactions need to be signed otherwise they are considered invalid transactions and will not be included in the blockchain. A raw transaction is a transaction in raw bytes. If one has the raw bytes of a valid transaction, they can send it to the blockchain. Otherwise, web3.js -- the library provided by Ethereum to interact with the blockchain -- automatically creates the signed transaction bytes as part of the default implementation. The library converts the JSON transaction to the raw bytes and automatically signs them. In a raw transaction nothing is done automatically, but it is developer's responsibility to first convert each parameter then sign the transaction and eventually send it to a node. 
+All transactions need to be signed otherwise they are considered invalid transactions and will not be included in the blockchain. A raw transaction is a transaction in raw bytes. If one has the raw bytes of a valid transaction, they can send it to the blockchain. Otherwise, web3.js -- the library provided by Ethereum to interact with the blockchain -- automatically creates the signed transaction bytes as part of the default implementation. The library converts the JSON transaction to the raw bytes and automatically signs them. In a raw transaction nothing is done automatically, but it is developer's responsibility to first convert each parameter then sign the transaction and eventually send it to a node.
 
-Using some javascript libraries (like ethereumjs-tx) raw transactions can be created and signed offline. After the creation, they can be serialised and sent to the GSLS which is accountable of sending the transaction to the blockchain. 
+Using some javascript libraries (like ethereumjs-tx) raw transactions can be created and signed offline. After the creation, they can be serialised and sent to the GSLS which is accountable of sending the transaction to the blockchain.
 
 \subsection*{Ethereum Node}
-A node is a piece of software that connects to other nodes, thus participating in the formation of the network. A node stores an entire copy of the blockchain, and a node may mine (but doesn't have to). All interaction with the blockchain (interaction with contracts, etc) needs to go via a node. It is also referred to as "blockchian client". 
+A node is a piece of software that connects to other nodes, thus participating in the formation of the network. A node stores an entire copy of the blockchain, and a node may mine (but doesn't have to). All interaction with the blockchain (interaction with contracts, etc) needs to go via a node. It is also referred to as "blockchian client".
 
 \subsection*{Mining}
 Mining is a computationally intensive work that requires a lot of processing power and time. Mining is the act of participating in a given peer distributed crypto-currency network in consensus. The miner is subsequently rewarded for providing solutions to challenging math problems. It is done by putting the computers hardware to use with mining applications.
 
 \subsection*{Other Terms}
 \begin{center}
- \begin{tabular}{| l | p{10cm} |} 
+ \begin{tabular}{| l | p{10cm} |}
  \hline
  \textbf{Term} & \textbf{Definition} \\
  \hline
-User & The one that owns a social record and has the right to create and update it as well as to search for other social records. The user does this by interacting with an application, the GSLS client. \\ 
+User & The one that owns a social record and has the right to create and update it as well as to search for other social records. The user does this by interacting with an application, the GSLS client. \\
  \hline
  GSLS client & It is a piece of code that allows the user to interact and send request to the GSLS server. In our last approach, the client is implemented as a Desktop application. \\
  \hline
@@ -64,12 +64,11 @@ User & The one that owns a social record and has the right to create and update 
 \end{center}
 
 \section{Approaches to Store Social Records}
-<<<<<<< Updated upstream
 \subsection{Store the Social Record}
-The most intuitive solution would be to switch from the DHT to the Blockchain, moving each social record through a transaction. 
+The most intuitive solution would be to switch from the DHT to the Blockchain, moving each social record through a transaction.
 Unfortunately after few considerations, this approach does not seem to be optimal:
 \begin{itemize}
-	\item Storing the entire social record would occupy a high amount of memory in the distributed node. 
+	\item Storing the entire social record would occupy a high amount of memory in the distributed node.
 In particular the limit for the data structure is 44kb, but is best practice to keep the records light.
 	\item Checking the real identity of the uploader would be impossible, one option could be to allow only a specific wallet address to write into it.
 	\item Looking up would not be efficient.
@@ -162,7 +161,7 @@ Because of this lack the described process cannot be pursued.
 	From here second draft of the possible approaches description
 	Needs to decide which one to maintain.
 \end{notation}
-=======
+
 %
 % \subsection{Store the Social Record}
 % The most intuitive solution would be to switch from the DHT to the Blockchain, moving each social record through a transaction.
@@ -262,7 +261,7 @@ Because of this lack the described process cannot be pursued.
 % 	From here second draft of the possible approaches description
 % 	Needs to decide which one to maintain.
 % \end{notation}
->>>>>>> Stashed changes
+
 
 \section{Using Accounts Without Hosting An Ethereum Node}
 
