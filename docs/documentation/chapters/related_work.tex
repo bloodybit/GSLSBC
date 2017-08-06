@@ -81,11 +81,14 @@ One interesting approach with BigChainDB is that it can be integrated with Ether
 \section{Blockstack Use Case}
 Blockstack is a particular implementation of a decentralized DNS system based on blockchain. It combines DNS functionality with public key infrastructure and is primarily meant to be used by new blockchain applications.
 
-According to the company: \"under the hood, Blockstack provides a decentralized domain name system (DNS), decentralized public key distribution system, and registry for apps and user identities\" [add reference].
+According to the company: \enquote{under the hood, Blockstack provides a decentralized domain name system (DNS), decentralized public key distribution system, and registry for apps and user identities}.
+\begin{notation}
+	 [add reference].
+\end{notation}
 
 The real breakthrough is the architecture the system is built on. It can be described as a three-layer design with the blockchain as the first and lower tier, the storage system as the upper and the peer network as middle layer.
 
-The architecture is shown in \ref{fig:blockstack-architecture}.
+The architecture is shown in \ref{fig1}.
 \begin{figure}[h]
 	\centering
   \includegraphics[width=0.8\textwidth]{blockstack-architecture}
@@ -93,12 +96,20 @@ The architecture is shown in \ref{fig:blockstack-architecture}.
 	\label{fig1}
 \end{figure}
 
-\begin{notation}
-	Why did we choose Ethereum
-\end{notation}
+\section{Choosing the best Blockchain}
+As showed, each blockchain implementation has its pro and cons. In this particular project the authors decided to use the Ethereum project due to the following reasons:
+\begin{itemize}
+	\item \textbf{Big Community}: Ethereum has the second biggest community after Bitcoin blockchain. This also mean a big userbase both when is needed to reach the users and when is matter of mining fees.
+	\item \textbf{Clear documentation}: It has one of the best documented website and a section on Stack OVer Flow.
+	\begin{notation}
+		Add Stack over flow reference
+	\end{notation}
+	\item \textbf{Transaction fees}: The transaction fee (even if not the cheapest) are pretty low in compare to Bitcoin.
+	\item \textbf{Easy to store and keep track of the changes}: Besides many other implementations, Ethereum is account base, which means that is possible to understand at a glance the state of one account.
+\end{itemize}
 
 \section{Solidity}
-Solidity is a high level programming language developed specially for Ethereum block chain. Solidity introduced smart contracts which is a base for different use cases like supply chain platforms, Banks, health care system etc. Smart contracts are executed by a computer network that uses consensus protocols to agree upon certain actions resulting from the smart’s contract code. Like other programming languages Solidity support inheritance, user defined types, libraries, control structures, comments and a lot more features. Syntax of solidity language is similar to java script. Due to that reason web developers and programmer can adopt it in very short period of time.
+Solidity is a high level programming language developed specially for Ethereum block chain. Solidity introduced smart contracts which is a base for different use cases like supply chain platforms, Banks, health care system etc. Smart contracts are executed by a computer network that uses consensus protocols to agree upon certain actions resulting from the smart’s contract code. Like other programming languages Solidity support inheritance, user defined types, libraries, control structures, comments and a lot more features. Syntax of solidity language is similar to java script. Due to that reason web developers can adopt it in very short period of time.
 
 Solidity is still in its early stage while non Ethereum projects are also involved to use solidity. Every language has their own weaknesses while in solidity a lot of things to be improved in near future. Theoretically it’s easy to talk about in idea but in reality it’s impossible to implement every idea in solidity. Solidity was the best fit for our project \textit{identity management in blockchain} through which we created contracts for Ethereum block chain.
 

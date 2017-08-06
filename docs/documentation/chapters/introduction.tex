@@ -4,14 +4,32 @@
 \section{Background}
 
 \subsection{SONIC Project}
-Today’s communication happens mostly through Online Social Network (OSN), but with their proliferation, some problems have arisen. The main issue is related to the fact that OSN are built in a closed an proprietary manner (think of Facebook, Twitter or LinkedIn) and don’t allow a smooth  communication among them. Therefore, the user is forced to create different accounts, and build different networks within for every platform. All this accounts and information correspond to the same user, but are heavily segregated from one another. This segregation is caused by the platform which aim to bind the user with a lock-in effect.
+Today’s communication happens mostly through Online Social Network (OSN), but with their proliferation, some problems have arisen. The main issue is related to the fact that OSN are built in a closed an proprietary manner (think of Facebook, Twitter or LinkedIn) and don’t allow a smooth  communication among them. Therefore, the user is forced to create different accounts, and build different networks within every platform. All this accounts and information correspond to the same user, but are heavily segregated from one another. This segregation is caused by the platform which aim to bind the user in a lock-in effect.
 
+<<<<<<< Updated upstream
 The SONIC project has been developed under suggestion of Telekom Innovation Laboratories to overcome this problem and facilitate a seamless connectivity between different OSN \cite{gondor2014sonic} allowing the migration of accounts between different platforms.
+=======
+The SONIC project has been developed under suggestion of Telekom Innovation Laboratories to overcome this problem and facilitate a seamless connectivity between different OSNs \citep{gondor2014sonic} allowing the migration of accounts between different platforms.
+
+The project is supported by a distributed and domain-independent ID management architecture where a GSLS (Global Social Lookup System) is employed to map Global ID to URL of a social profile. This mapping is possible thanks to datasets called Social Records which are digitally signed.
+
+\subsection {GSLS}
+The current implementation of the GSLS is implemented in Java Spring-Boot and is exposing APIs for creating, updating and  querying the Social Records. The Social Records are stored in  Distributed Hash Table (DHT) and RSA private-public key encryption is used to validate the records. However, there is a security issue with this implementation because someone can spawn a malicious node in the DHT which contains validated (signed by the real user), but outdated (old) data meaning that the most recent data are not always reachable, and there is no way to detect this malfuncioning. The data is checked against the user’s public key and it is considered valid if the signature is correct, but we cannot be sure if this data is the most recent one.
+
+To overcome this security issue, we have been working on an implementation which stores the Social Records (SR) on the Blockchain, since the Blockchain is immutable distributed ledger of transactions which can be followed in order to determine the most recent state of the SR.
+
+In order to achieve this, we are building an application which exposes REST-ful APIs for creation, modification and retrieving of SR that makes use of the Blockchain technology. Additionally, the service architecture needs to be distributed, without single point of failure and it needs to prevent attempts to write crafted datasets or overwrite datasets.
+
+>>>>>>> Stashed changes
 
 The project is supported by a distributed and domain-independent ID management architecture where a GSLS (Global Social Lookup System) is employed to map Global ID to URL of a social profile. This mapping is possible thanks to datasets called Social Records (SR) which are digitally signed.
 
 \subsection{Blockchain}
+<<<<<<< Updated upstream
 Blockchain is a type of distributed ledger or decentralized database that keeps records of digital transactions. Rather than having a central administrator like a traditional database (think banks, governments and accountants), a distributed ledger has a network of replicated databases, synchronized via the internet and visible to anyone within the network. Blockchain networks can be private with restricted membership similar to an intranet, or public, like the Internet, accessible to any person in the world.
+=======
+Blockchain is a type of distributed ledger or decentralized database that keeps records of digital transactions. Rather than having a central administrator like a traditional database, (think banks, governments \& accountants), a distributed ledger has a network of replicated databases, synchronized via the internet and visible to anyone within the network.Blockchain networks can be private with restricted membership similar to an intranet, or public, like the Internet, accessible to any person in the world.
+>>>>>>> Stashed changes
 
 When a digital transaction is carried out, it is grouped together in a cryptographically protected block with other transactions that have occurred in some time period and sent out to the entire network. Miners (members in the network with high levels of computing power) then compete to validate the transactions by solving complex coded problems. The first miner to solve the problems and validate the block receives a reward.
 
@@ -19,7 +37,11 @@ The validated block of transactions is then timestamped and added to a chain in 
 
 Blocks hold batches of valid transactions that are hashed and encoded into a Merkle tree. Each block includes the hash of the prior block in the blockchain, linking the two. Variants of this format were used previously, for example in Git. The format is not by itself sufficient to qualify as a blockchain. The linked blocks form a chain. This iterative process confirms the integrity of the previous block, all the way back to the original genesis block.
 
+<<<<<<< Updated upstream
 Blockchain’s decentralized, open and cryptographic nature allow people to trust each other and transact peer to peer, making the need for intermediaries obsolete. This also brings unprecedented security benefits. Hacking attacks that commonly impact large centralized intermediaries like banks would be virtually impossible to pull off on the blockchain. For example if someone wanted to hack into a particular block in a blockchain, a hacker would not only need to hack into that specific block, but all of the proceeding blocks going back the entire history of that blockchain. And they would need to do it on every ledger in the network, which could be millions, simultaneously.
+=======
+Blockchain’s decentralized, open \& cryptographic nature allow people to trust each other and transact peer to peer, making the need for intermediaries obsolete. This also brings unprecedented security benefits. Hacking attacks that commonly impact large centralized intermediaries like banks would be virtually impossible to pull off on the blockchain. For example - If someone wanted to hack into a particular block in a blockchain, a hacker would not only need to hack into that specific block, but all of the proceeding blocks going back the entire history of that blockchain. And they would need to do it on every ledger in the network, which could be millions, simultaneously.
+>>>>>>> Stashed changes
 
 Blockchains are secure by design and are an example of a distributed computing system with high Byzantine fault tolerance.
 

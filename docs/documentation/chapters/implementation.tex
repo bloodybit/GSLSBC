@@ -20,7 +20,11 @@ This information is needed to create the row transaction before sending it to th
 The User can create a new social record or modify an existing one (of course, only if he is allowed to).
 When the user clicks on the “submit” Button the following operations are performed:
 
+<<<<<<< Updated upstream
 \begin{list}{},
+=======
+\begin{itemize}
+>>>>>>> Stashed changes
   \item \textbf{To Address}: convert the address of the receiver (in this case the contract) to Hex
   \item \textbf{Get the Gas price}: the gas price is changing constantly, and in order to set the right amount, it is required to run a get HTTP request to the GSLS server.
   \item \textbf{Gas Limit}: the maximum amount of Gas that the user wants to spend for the transaction to flex.
@@ -43,9 +47,7 @@ The following interfaces are needed:
 \subsection{POST /socialrecord \& PUT /socialrecord}
   For a creation of a new social record the following steps are requred:
   \begin{itemize}
-    \item GET NONCE \begin{notation}
-      TODO
-  \end{notation}
+    \item \GET current Nonce and current Gas Price, asking to the server for the current account nonce and the gasPrice to set in the raw transaction.
     \item The body of the request only contains a signed transaction. The transaction is pushed into the blockchain and the hash of it returned. The hash is useful because starting from that is possible to check the status of the transaction (e.g. on https://ropsten.etherscan.io).
     \item It is possible to create a notification system based on polling, with the client asking for the good or bad result of the operation. It is not possible to send the result in the same HTTP response since it could take more than 90 seconds and therefore time out the request.
   \end{itemize}
@@ -91,7 +93,7 @@ The creator of the contract is stored in the owner variable with type address.
 \begin{lstlisting}
   mapping (address => User) users;
 \end{lstlisting}
-The mapping \textit{users} maps each address with one \textit{User} structure. 
+The mapping \textit{users} maps each address with one \textit{User} structure.
 This is used to prove ownership of the SR when someone tries to modify it later.
 \subsubsection{srs}
 \begin{lstlisting}
@@ -203,7 +205,7 @@ The users that call this function can only delete their own social record.
         selfdestruct(owner);
     }
 \end{lstlisting}
-In this function one modifier is specified, in particular the \textit{onlyOwner} modifier; in fact, only the creator of the contract can terminate the contract itself. 
+In this function one modifier is specified, in particular the \textit{onlyOwner} modifier; in fact, only the creator of the contract can terminate the contract itself.
 
 \subsection{Events}
 There are 3 events that are implemented
@@ -213,4 +215,3 @@ There are 3 events that are implemented
  event SocialReocordDeleted(address deleter, string globalId);
 \end{lstlisting}
 As each of the names of the events suggests, the events are invoked in case of Social Record creation, update or deletion.
-
