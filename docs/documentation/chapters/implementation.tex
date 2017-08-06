@@ -1,4 +1,10 @@
-\chapter{Implementation}
+\documentclass[10pt]{article}
+\usepackage[usenames]{color} %used for font color
+\usepackage{amssymb} %maths
+\usepackage{amsmath} %maths
+\usepackage[utf8]{inputenc} %useful to type directly diacritic characters
+\begin{document}
+\[\chapter{Implementation}
 \label{implementation}
 
 \section{System Architecture}
@@ -13,7 +19,7 @@ The architecture is shown in the picture below: \\
 
 \section{User side}
 The client can download the software locally ( directly from the GSLS) from GitHub or wherever it is hosted).
-In this case, it is on Electron application running Nodejs on the backend side and React on the front side, where it is possible for a user to login, upload the Ethereum wallet file and the password.
+In this case, it is on Electron application running Nodejs on the backend side and React on the frontend side, where it is possible for a user to login, upload the Ethereum wallet file and the password.
 This information is needed to create the row transaction before sending it to the GSLS server.
 
 \subsection{POST /socialrecord \& PUT /socialrecord}
@@ -211,3 +217,5 @@ There are 3 events that are implemented
  event SocialReocordDeleted(address deleter, string globalId);
 \end{lstlisting}
 As each of the names of the events suggests, the events are invoked in case of Social Record creation, update or deletion.
+\]
+\end{document}
