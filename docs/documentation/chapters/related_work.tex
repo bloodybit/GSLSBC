@@ -27,9 +27,10 @@ Aside from routing, there exist many algorithms that exploit the structure of th
 \section{Blockchain Implementations}
 
 \subsection*{Blockchain introduction}
-Blockchain’s distributed ledger system is used to keep track of Bitcoin transactions. Blockchain eliminates the need for central authorities and enables each user of the system to maintain their own copy of the ledger. It also keeps all copies of the ledger synchronized through a consensus algorithm.Bitcoin miners do the recording and validation of the transactions. The miners are necessary to prevent ‘double spend.’
+Blockchain’s distributed ledger system is used to keep track of Bitcoin transactions. Blockchain eliminates the need for central authorities and enables each user of the system to maintain their own copy of the ledger. It also keeps all copies of the ledger synchronized through a consensus algorithm.Bitcoin miners do the recording and validation of the transactions. The miners are necessary to prevent "double spend".
+
 \subsection*{Bitcoin}
-Blockchain is a distributed ledger technology used to keep track of Bitcoin cryptocurrency transactions. Distributed ledgers create a data structure – like a chain – where records of every single Bitcoin transaction live. To prevent “double spend,” all Bitcoin transactions are validated and then permanently archived in the cryptographic ledger or chain. The validation is done via a peer-to-peer process that is hugely computer-intensive. It is supported by a global network of volunteers – known as “miners” – who are incentivized mainly by Bitcoin’s mining reward.
+Blockchain is a distributed ledger technology used to keep track of Bitcoin cryptocurrency transactions. Distributed ledgers create a data structure – like a chain – where records of every single Bitcoin transaction live. To prevent “double spend”, all Bitcoin transactions are validated and then permanently archived in the cryptographic ledger or chain. The validation is done via a peer-to-peer process that is hugely computer-intensive. It is supported by a global network of volunteers – known as "miners" – who are incentivized mainly by Bitcoin’s mining reward.
 In essence, Bitcoin uses cryptography to enable participants on the network to update the ledger in a secure way without the need for a central authority. The key to Blockchain was to agree on the order of entries in the ledger. Once this was in place, distributed control of Bitcoin was possible.
 
 \subsection*{Namecoin}
@@ -81,10 +82,7 @@ One interesting approach with BigChainDB is that it can be integrated with Ether
 \section{Blockstack Use Case}
 Blockstack is a particular implementation of a decentralized DNS system based on blockchain. It combines DNS functionality with public key infrastructure and is primarily meant to be used by new blockchain applications.
 
-According to the company: \enquote{under the hood, Blockstack provides a decentralized domain name system (DNS), decentralized public key distribution system, and registry for apps and user identities}.
-\begin{notation}
-	 [add reference].
-\end{notation}
+According to the company: \enquote{under the hood, Blockstack provides a decentralized domain name system (DNS), decentralized public key distribution system, and registry for apps and user identities} \cite{BlockStackMainPage}.
 
 The real breakthrough is the architecture the system is built on. It can be described as a three-layer design with the blockchain as the first and lower tier, the storage system as the upper and the peer network as middle layer.
 
@@ -92,7 +90,7 @@ The architecture is shown in \ref{fig1}.
 \begin{figure}[h]
 	\centering
   \includegraphics[width=0.8\textwidth]{blockstack-architecture}
-	\caption{Basic Blockstack architecture}
+	\caption{Basic Blockstack architecture \cite{BlockStackImage}}
 	\label{fig1}
 \end{figure}
 
@@ -101,17 +99,14 @@ As shown, each blockchain implementation has its pro and cons. In this particula
 \begin{itemize}
 	\item \textbf{Big Community}: Ethereum has the second biggest community after Bitcoin blockchain. This also mean a big user base both when is needed to reach the users and when is matter of mining fees.
 	\item \textbf{Clear documentation}: It has one of the best documented website and a section on Stack Overflow.
-	\begin{notation}
-		Add Stack overflow reference
-	\end{notation}
 	\item \textbf{Transaction fees}: The transaction fee (even if not the cheapest) are pretty low in compare to Bitcoin.
 	\item \textbf{Easy to store and keep track of the changes}: Besides many other implementations, Ethereum is account base, which means that is possible to understand at a glance the state of one account.
 \end{itemize}
 
 \section{Solidity}
-Solidity is a high level programming language developed specially for Ethereum blockchain. Solidity introduced smart contracts which is a base for different use cases like supply chain platforms, Banks, health care system etc. Smart contracts are executed by a computer network that uses consensus protocols to agree upon certain actions resulting from the smart’s contract code. Like other programming languages Solidity support inheritance, user defined types, libraries, control structures, comments and a lot more features. Syntax of solidity language is similar to java script. Due to that reason web developers can adopt it in very short period of time.
+Solidity is a high level programming language developed specifically for Ethereum blockchain. Solidity introduced the concept of \textit{smart contract} which is the base for different use cases like for voting, crowdfunding, blind auctions, multi-signature wallets and more. 
 
-Solidity is still in its early stage while non Ethereum projects are also involved to use solidity. Every language has their own weaknesses while in solidity a lot of things to be improved in near future. Theoretically it’s easy to talk about in idea but in reality it’s impossible to implement every idea in solidity. Solidity was the best fit for our project \textit{identity management in blockchain} through which we created contracts for Ethereum blockchain.
+Smart contracts are executed inside the Ethereum Virtual Machine (EVM) by any node in the network. The nodes use consensus protocols to agree upon certain actions resulting from the smart’s contract code. Like other programming languages, Solidity support inheritance, user defined types, libraries, control structures, comments and a many other features. The syntax of solidity is designed around ECMAScript to make it easier for existing web developers. The latter characteristic made it the preferred language to write smart contracts on Ethereum.
 
 \section{Public Key Cryptography}
 
@@ -124,7 +119,7 @@ With ECC, you can use smaller keys to get the same levels of security. Small key
 RSA algorithm, along with the Diffie-Hellman represented the first viable cryptographic schemes where security was based on the theory of numbers; it was the first to enable secure communication between two parties without a shared secret.
 Modern cryptography is founded on the idea that the key that you use to encrypt your data can be made public while the key that is used to decrypt your data can be kept private.
 
-The algorithm multiplies two prime numbers. If multiplication is the easy algorithm, its difficult pair algorithm is factoring the product of the multiplication into its two component primes. Algorithms that have this characteristic—easy in one direction, hard the other—are known as trapdoor functions. Finding a good trapdoor function is critical to making a secure public key cryptographic system.
+The algorithm multiplies two prime numbers. If multiplication is the easy algorithm, its difficult pair algorithm is factoring the product of the multiplication into its two component primes. Algorithms that have this characteristic — easy in one direction, hard the other — are known as trapdoor functions. Finding a good trapdoor function is critical to making a secure public key cryptographic system.
 
 Its security relies on the fact that factoring is slow and multiplication is fast. In general, a public key encryption system has two components, a public key and a private key. Encryption works by taking a message and applying a mathematical operation to it to get a random-looking number. Decryption takes the random looking number and applies a different operation to get back to the original number. Encryption with the public key can only be undone by decrypting with the private key.
 

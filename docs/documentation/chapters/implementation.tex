@@ -8,7 +8,7 @@ The architecture is shown in the picture below: \\
 	\centering
   \includegraphics[width=1\textwidth]{gsls-architecture}
 	\caption{Basic architecture: n clients communicate with m GSLS server instances. The GSLS instances can interface with the blockchain because each and every of them is holding an Ethereum node. All the operations are referenced to the contract address storing the list of social records.}
-	\label{fig1}
+	\label{fig4}
 \end{figure}
 
 \section{User side}
@@ -16,7 +16,7 @@ The client can download the software locally ( directly from the GSLS) from GitH
 In this case, it is on Electron application running Nodejs on the backend side and React on the frontend side, where it is possible for a user to login, upload the Ethereum wallet file and the password.
 This information is needed to create the row transaction before sending it to the GSLS server.
 
-\subsection{POST /socialrecord \& PUT /socialrecord}
+\subsection{POST /socialrecord And PUT /socialrecord}
 The User can create a new social record or modify an existing one (of course, only if he is allowed to).
 When the user clicks on the “submit” Button the following operations are performed:
 
@@ -66,7 +66,9 @@ In the created social record contract there are 2 structures:
           bool exists;
       }
 \end{lstlisting}
+
 The social record structure allows storing one string and setting one boolean value to mark if the above mentioned social record is valid.
+
 
 \subsubsection{User}
 \begin{lstlisting}
@@ -75,9 +77,12 @@ The social record structure allows storing one string and setting one boolean va
           bool exists;
       }
 \end{lstlisting}
+
 In the same way, it allows storing one globalId and a boolean variable to mark if the specific globalId is existing
 
+
 \subsection{Variables}
+
 \subsubsection{owner}
 \begin{lstlisting}
   address owner;
@@ -85,12 +90,14 @@ In the same way, it allows storing one globalId and a boolean variable to mark i
 The creator of the contract is stored in the owner variable with type address.
 
 \subsection{Mappings}
+
 \subsubsection{users}
 \begin{lstlisting}
   mapping (address => User) users;
 \end{lstlisting}
 The mapping \textit{users} maps each address with one \textit{User} structure.
 This is used to prove ownership of the SR when someone tries to modify it later.
+
 \subsubsection{srs}
 \begin{lstlisting}
     mapping (string => SR) srs;
@@ -99,6 +106,7 @@ The mapping \textit{srs} maps each globalId (string) with one \textit{SR} struct
 
 \subsection{Modifiers}
 The modifiers define who is authorised to call a specific function.
+
 \subsubsection{onlyOwner}
 \begin{lstlisting}
   modifier onlyOwner {
