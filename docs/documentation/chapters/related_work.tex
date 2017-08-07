@@ -1,4 +1,10 @@
-\chapter{Related Work}
+\documentclass[10pt]{article}
+\usepackage[usenames]{color} %used for font color
+\usepackage{amssymb} %maths
+\usepackage{amsmath} %maths
+\usepackage[utf8]{inputenc} %useful to type directly diacritic characters
+\begin{document}
+\[\chapter{Related Work}
 \label{chapter:related_work}
 
 \section{Directory Service}
@@ -68,14 +74,14 @@ Swarm is a distributed storage platform and content distribution service, a nati
 From the end user's perspective, Swarm is not that different from WWW, except that uploads are not to a specific server. The objective is to peer-to-peer storage and serving solution that is DDOS-resistant, zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer to peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution, service payments and content availability insurance.
 
 \subsection*{IPFS}
-The InterPlanetary File System (IPFS) is a peer-to-peer distributed file system that seeks to connect all computing devices with the same system of files. In some ways, IPFS is similar to the Web, but IPFS could be seen as a single BitTorrent swarm, exchanging objects within one Git repository. In other words, IPFS provides a high throughput content-addressed block storage model, with contentaddressed hyper links. This forms a generalized Merkle DAG, a data structure upon which one can build versioned file systems, blockchains, and even a Permanent Web. IPFS combines a distributed hashtable, an incentivized block exchange, and a self-certifying namespace. IPFS has no single point of failure, and nodes do not need to trust each other.
+The InterPlanetary File System (IPFS) is a peer-to-peer distributed file system that seeks to connect all computing devices with the same system of files. In some ways, IPFS is similar to the Web, but IPFS could be seen as a single BitTorrent swarm, exchanging objects within one Git repository. In other words, IPFS provides a high throughput content-addressed block storage model, with content-addressed hyper links. This forms a generalized Merkle DAG, a data structure upon which one can build versioned file systems, blockchains, and even a Permanent Web. IPFS combines a distributed hashtable, an incentivized block exchange, and a self-certifying namespace. IPFS has no single point of failure, and nodes do not need to trust each other.
 
 \subsection*{Filecoin}
-Filecoin is a distributed electronic currency similar to Bitcoin. Unlike Bitcoin’s computation-only proof-of-work, Filecoin’s proof-of-work function includes a proof-of-retrievability component, which requires nodes to prove they store a particular file. The Filecoin network forms an entirely distributed file sorage system, whose nodes are incentivized to store as much of the entire network’s data as they can. The currency is awarded for storing files, and is transferred in transactions, as in Bitcoin. Files are added to the network by spending currency. This produces strong monetary incentives for individuals to join and work for the network. In the course of ordinary operation of the Filecoin network, nodes contribute useful work in the form of storage and distribution of valuable data.
+Filecoin is a distributed electronic currency similar to Bitcoin. Unlike Bitcoin’s computation-only proof-of-work, Filecoin’s proof-of-work function includes a proof-of-retrievability component, which requires nodes to prove they store a particular file. The Filecoin network forms an entirely distributed file storage system, whose nodes are incentivized to store as much of the entire network’s data as they can. The currency is awarded for storing files, and is transferred in transactions, as in Bitcoin. Files are added to the network by spending currency. This produces strong monetary incentives for individuals to join and work for the network. In the course of ordinary operation of the Filecoin network, nodes contribute useful work in the form of storage and distribution of valuable data.
 
 \subsection*{BigChainDB}
-BigChainDB is aiming to merge database and Blockchain, trying to keep all the properties of the first such as a lineat scaling throuhput, an efficient query language and permissions in order to interact with it. In particular developing a MongoDB based NoSQL distributed database.
-With the foundamental features of Blockchain as decentralisation, immutability, creation and movement of digital assets.
+BigChainDB is aiming to merge database and Blockchain, trying to keep all the properties of the first such as a linear scaling throughput, an efficient query language and permissions in order to interact with it. In particular developing a MongoDB based NoSQL distributed database.
+With the fundamental features of Blockchain as decentralisation, immutability, creation and movement of digital assets.
 One interesting approach with BigChainDB is that it can be integrated with Ethereum (sort of its database) and be run on private or public networks.
 
 \section{Blockstack Use Case}
@@ -97,21 +103,21 @@ The architecture is shown in \ref{fig1}.
 \end{figure}
 
 \section{Choosing the best Blockchain}
-As showed, each blockchain implementation has its pro and cons. In this particular project the authors decided to use the Ethereum project due to the following reasons:
+As shown, each blockchain implementation has its pro and cons. In this particular project the authors decided to use the Ethereum project due to the following reasons:
 \begin{itemize}
-	\item \textbf{Big Community}: Ethereum has the second biggest community after Bitcoin blockchain. This also mean a big userbase both when is needed to reach the users and when is matter of mining fees.
-	\item \textbf{Clear documentation}: It has one of the best documented website and a section on Stack OVer Flow.
+	\item \textbf{Big Community}: Ethereum has the second biggest community after Bitcoin blockchain. This also mean a big user base both when is needed to reach the users and when is matter of mining fees.
+	\item \textbf{Clear documentation}: It has one of the best documented website and a section on Stack Overflow.
 	\begin{notation}
-		Add Stack over flow reference
+		Add Stack overflow reference
 	\end{notation}
 	\item \textbf{Transaction fees}: The transaction fee (even if not the cheapest) are pretty low in compare to Bitcoin.
 	\item \textbf{Easy to store and keep track of the changes}: Besides many other implementations, Ethereum is account base, which means that is possible to understand at a glance the state of one account.
 \end{itemize}
 
 \section{Solidity}
-Solidity is a high level programming language developed specially for Ethereum block chain. Solidity introduced smart contracts which is a base for different use cases like supply chain platforms, Banks, health care system etc. Smart contracts are executed by a computer network that uses consensus protocols to agree upon certain actions resulting from the smart’s contract code. Like other programming languages Solidity support inheritance, user defined types, libraries, control structures, comments and a lot more features. Syntax of solidity language is similar to java script. Due to that reason web developers can adopt it in very short period of time.
+Solidity is a high level programming language developed specially for Ethereum blockchain. Solidity introduced smart contracts which is a base for different use cases like supply chain platforms, Banks, health care system etc. Smart contracts are executed by a computer network that uses consensus protocols to agree upon certain actions resulting from the smart’s contract code. Like other programming languages Solidity support inheritance, user defined types, libraries, control structures, comments and a lot more features. Syntax of solidity language is similar to java script. Due to that reason web developers can adopt it in very short period of time.
 
-Solidity is still in its early stage while non Ethereum projects are also involved to use solidity. Every language has their own weaknesses while in solidity a lot of things to be improved in near future. Theoretically it’s easy to talk about in idea but in reality it’s impossible to implement every idea in solidity. Solidity was the best fit for our project \textit{identity management in blockchain} through which we created contracts for Ethereum block chain.
+Solidity is still in its early stage while non Ethereum projects are also involved to use solidity. Every language has their own weaknesses while in solidity a lot of things to be improved in near future. Theoretically it’s easy to talk about in idea but in reality it’s impossible to implement every idea in solidity. Solidity was the best fit for our project \textit{identity management in blockchain} through which we created contracts for Ethereum blockchain.
 
 \section{Public Key Cryptography}
 
@@ -131,3 +137,5 @@ Its security relies on the fact that factoring is slow and multiplication is fas
 In RSA, this maximum value (call it max) is obtained by multiplying two random prime numbers. The public and private keys are two specially chosen numbers that are greater than zero and less than the maximum value (call them pub and priv). To encrypt a number, you multiply it by itself pub times, making sure to wrap around when you hit the maximum. To decrypt a message, you multiply it by itself priv times, and you get back to the original number.
 
 Specialized algorithms like the Quadratic Sieve and the General Number Field Sieve were created to tackle the problem of prime factorization and have been moderately successful. As the resources available to decrypt numbers increase, the size of the keys needs to grow even faster. This is not a sustainable situation for mobile and low-powered devices that have limited computational power.
+\]
+\end{document}

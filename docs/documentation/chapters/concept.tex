@@ -1,4 +1,10 @@
-\chapter{Concept and Design}
+\documentclass[10pt]{article}
+\usepackage[usenames]{color} %used for font color
+\usepackage{amssymb} %maths
+\usepackage{amsmath} %maths
+\usepackage[utf8]{inputenc} %useful to type directly diacritic characters
+\begin{document}
+\[\chapter{Concept and Design}
 \label{chapter:concept}
 
 This chapter holds and explains in detail the different approaches taken into consideration in order to store social records. Before doing so, it is important to define some terms and conventions which are going to be used in the following sections and chapters. The terms are particularly related to Ethereum, the chosen blockchain implementation.
@@ -44,7 +50,7 @@ Using some javascript libraries (like ethereumjs-tx) raw transactions can be cre
 A node is a piece of software that connects to other nodes, thus participating in the formation of the network. A node stores an entire copy of the blockchain, and a node may mine (but doesn't have to). All interaction with the blockchain (interaction with contracts, etc) needs to go via a node. It is also referred to as "blockchian client".
 
 \subsection*{Mining}
-Mining is a computationally intensive work that requires a lot of processing power and time. Mining is the act of participating in a given peer distributed crypto-currency network in consensus. The miner is subsequently rewarded for providing solutions to challenging math problems. It is done by putting the computers hardware to use with mining applications.
+Mining is a computationally intensive work that requires a lot of processing power and time. Mining is the act of participating in a given peer distributed crypto-currency network in consensus. The miner is subsequently rewarded for providing solutions to challenging math problems. It is done by putting the computer's hardware to use with mining applications.
 
 \subsection*{Other Terms}
 \begin{center}
@@ -93,7 +99,7 @@ In order to ask the server to record a particular transaction, a password is req
 In order to solve this problem asymmetric keys solutions can be implemented (such as the above mentioned RSA and ECC).
 
 
-The contract will therefore be a \textit{key-value} array whith the globalId as key and the as value a json object with the folliwing structure:
+The contract will therefore be a \textit{key-value} array with the globalId as key and the as value a json object with the following structure:
 
 \paragraph{In case we store the hashed Social Record}\
 \begin{lstlisting}
@@ -344,3 +350,5 @@ The SR is stored in a Key Value array as Gid-SR
 Get is pretty trivial, asking with a GlobalId to the Ethereum node, it will return the social record.
 
 This approach forces the users to have an Ethereum wallet, but it is conceptually more correct because it uses the offline transaction form.
+\]
+\end{document}
