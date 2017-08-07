@@ -1,10 +1,4 @@
-\documentclass[10pt]{article}
-\usepackage[usenames]{color} %used for font color
-\usepackage{amssymb} %maths
-\usepackage{amsmath} %maths
-\usepackage[utf8]{inputenc} %useful to type directly diacritic characters
-\begin{document}
-\[\chapter{Evaluation}
+\chapter{Evaluation}
 \label{evaluation}
 
 \section{Performance}
@@ -34,5 +28,4 @@ It has been proved in the concept section the security of this approach, in part
 \item {Contract}: The contract has a consistent number of checkers in order to stop attack to change one particular social record (functionalities that were not available within the DHT.
 \item {Client Server}: Not only the storying method is secure but also the communication between the client and the server since the transactions are sent already encrypted.
 \item {Malicious GSLS}: in this approach a malicious GSLS server cannot change the content of one social record nor upload an old one (due to the expired nonce of the transaction). The only feasible attack is to send false information to the client (e.g. nonce), resulting in an invalid transaction. Nevertheless the open source nature of the sonic project allows to arbitrary choose the GSLS server the user wants to link to. It will be therefore only necessary to change the server location in the desktop application settings.
-\end{list}\]
-\end{document}
+\end{list}
