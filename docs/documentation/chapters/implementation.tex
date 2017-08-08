@@ -37,7 +37,7 @@ The signed transaction can then be sent to the Server via HTTP.
 \subsection{GET /socialrecord/:GlobalID}
 The get request, used to retrieve the social record for a particular GlobalID, is a simple promise that contacts the server specifying the global id and waiting for the result.
 
-\section{Server}
+\section{Server Side}
 The GSLS Server can be converted to a REST-ful Server delegated at pulling / pushing social records from / to the blockchain.
 The following interfaces are needed:
 \subsection{POST /socialrecord \& PUT /socialrecord}
@@ -52,7 +52,7 @@ The following interfaces are needed:
 The Server receives an HTTP request with one Global ID as parameter. It gets the social record from the blockchain with the help of the ethereum contract function and then it sends it back to the client as an HTTP response.
 In this case, it is not required to set up the polling mechanism because the get transaction operates on constant values and therefore does not need to be mined (the mining operation usually takes more time, in Ethereum from 30 seconds to potentially infinite).
 
-\section{Contract}
+\section{Blockchain Side - Contract}
 The contract can be perceived as a class (with constructors and functions) stored in the blockchain.
 The mechanism (simplified) is that having the contract stored (with a unique address) in the Ethereum BC and one wallet sending one transaction to the contract address containing the method to call: it is possible to obtain the same output in all the nodes that will receive the transaction.
 
@@ -83,7 +83,7 @@ In the same way, it allows storing one globalId and a boolean variable to mark i
 
 \subsection{Variables}
 
-\subsubsection{owner}
+\subsubsection{Owner}
 \begin{lstlisting}
   address owner;
 \end{lstlisting}
@@ -91,14 +91,14 @@ The creator of the contract is stored in the owner variable with type address.
 
 \subsection{Mappings}
 
-\subsubsection{users}
+\subsubsection{Users}
 \begin{lstlisting}
   mapping (address => User) users;
 \end{lstlisting}
 The mapping \textit{users} maps each address with one \textit{User} structure.
 This is used to prove ownership of the SR when someone tries to modify it later.
 
-\subsubsection{srs}
+\subsubsection{Srs}
 \begin{lstlisting}
     mapping (string => SR) srs;
 \end{lstlisting}
@@ -107,7 +107,7 @@ The mapping \textit{srs} maps each globalId (string) with one \textit{SR} struct
 \subsection{Modifiers}
 The modifiers define who is authorised to call a specific function.
 
-\subsubsection{onlyOwner}
+\subsubsection{OnlyOwner}
 \begin{lstlisting}
   modifier onlyOwner {
       require(msg.sender == owner);
@@ -116,7 +116,7 @@ The modifiers define who is authorised to call a specific function.
 \end{lstlisting}
 The caller of the function must be the owner of the contract.
 
-\subsubsection{onlyUser}
+\subsubsection{OnlyUser}
 \begin{lstlisting}
    modifier onlyUser {
         if(users[msg.sender].exists) {
@@ -126,7 +126,7 @@ The caller of the function must be the owner of the contract.
 \end{lstlisting}
 The caller of the function must be verified user.
 
-\subsubsection{onlyNotUser}
+\subsubsection{OnlyNotUser}
 \begin{lstlisting}
  modifier onlyNotUser {
        if(!users[msg.sender].exists) {
@@ -152,7 +152,7 @@ The address of the creator is stored in the contract: he is the only one allowed
 The first check that needs to be done is to check if the globalId has already been taken (if the condition verifies then return false).
 Otherwise, the globalId is added to the \textit{srs} map with the social record object (the social record string received in input and the boolean set to true: existing). Then the social record is returned.
 
-\subsubsection{getSocialRecord}
+\subsubsection{getSocialRecord(string)}
 
 \begin{lstlisting}
   function getSocialRecord(string _globalId) constant returns (string) {
@@ -167,7 +167,7 @@ Otherwise, the globalId is added to the \textit{srs} map with the social record 
 This functionality is characterised by the word \textit{constant}, which means that the instructions contained into the function will not change the state of the blockchain: therefore this function can be performed for free.
 The function, in particular, receives one globalId as a parameter. If the globalId is not passed as a parameter, it throws an exception, otherwise it returns the requested social record.
 
-\subsubsection{updateSocialRecord}
+\subsubsection{updateSocialRecord(string, string)}
 \begin{lstlisting}
   function updateSocialRecord(string _globalId, string _socialRecordString) returns (bool, string){
 
@@ -193,7 +193,7 @@ The second check is about the existence of the social record in a similar manner
 
 Then the \textit{srs} map is changed at index which equals to globalId with a new and updated structure.
 
-\subsubsection{deleteSocialRecord}
+\subsubsection{deleteSocialRecord(string)}
 \begin{lstlisting}
   function deleteSocialRecord(string _globalId) returns (bool) {
         delete srs[_globalId];
@@ -203,7 +203,7 @@ Then the \textit{srs} map is changed at index which equals to globalId with a ne
 \end{lstlisting}
 The users that call this function can only delete their own social record.
 
-\subsubsection{kill}
+\subsubsection{kill()}
 \begin{lstlisting}
   function kill() onlyOwner {
         selfdestruct(owner);
