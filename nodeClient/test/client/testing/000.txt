@@ -1,0 +1,24 @@
+geth --fast --cache=512 --rpcapi personal,db,eth,net,web3 --rpc --testnet console
+
+
+CONTRACT ADDRESS 
+——————————————————————————————————————————————————————— 
+0x4415948a738Addf2d83755E652B8cfe12bA00cd5
+
+
+
+
+ACCOUNT 0 
+——————————————————————————————————————————————————————— 
+ADDR: 0x9d9e76d28371fdee907b4e8cf3d6a89330df18c5
+GID: 1WQZLRE0PWU46VPD2RJ3231AO6ZRCI8YMMQLRC5KFYTTYB8UH0
+
+ACCOUNT 1
+——————————————————————————————————————————————————————— 
+ADDR: 0x26ac18ae6e1f81e237b99b9279a7605ff4a26ae0
+GID: 9AQZLEE0PWA46VPF2RJ3231AO6ZRCI8YMLQLRC5KFYTTYB8UH0
+
+ACCOUNT 2 
+——————————————————————————————————————————————————————— 
+ADDR: 0x313dec6de8f091dd5e653ab7b470466bc21e2865
+GID: 4RQZLEE0PWA46VCG2RJ3231AO6ZRXI8YMLQLRC5KFYTTYB8UH0
